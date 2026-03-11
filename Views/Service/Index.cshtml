@@ -1,0 +1,151 @@
+@model List<JollibeeClone.Models.Service>
+@{
+    ViewData["Title"] = "Dịch Vụ";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/service-section.css" />
+}
+
+<!-- Hero Section với background image giống thật -->
+<section class="services-hero-real">
+    <div class="hero-background-overlay"></div>
+    <div class="container">
+        <div class="hero-content text-center text-white">
+            <h1 class="hero-main-title">DỊCH VỤ</h1>
+            <p class="hero-subtitle-real">TẬN HƯỞNG NHỮNG KHOẢNH KHẮC TRỌN VẸN CÙNG JOLLIBEE</p>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section với background trắng -->
+<section class="services-section-real">
+    <div class="container">
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @TempData["ErrorMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        @if (Model != null && Model.Any())
+        {
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                var service = Model[i];
+                var isEven = i % 2 == 0;
+                
+                <div class="row align-items-center service-row-real @(isEven ? "service-even" : "service-odd") @(i < Model.Count - 1 ? "mb-5" : "")">
+                    @if (isEven)
+                    {
+                        <!-- Image on left, text on right -->
+                        <div class="col-lg-4 col-md-5 text-center mb-4 mb-md-0">
+                            <div class="service-image-container-real">
+                                @if (!string.IsNullOrEmpty(service.ImageUrl))
+                                {
+                                    <img src="@service.ImageUrl" alt="@service.ServiceName" class="service-image-real" loading="lazy" />
+                                }
+                                else
+                                {
+                                    <div class="service-image-placeholder-real">
+                                        <i class="fas fa-concierge-bell"></i>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-md-7">
+                            <div class="service-content-real">
+                                <h3 class="service-title-real">@service.ServiceName</h3>
+                                @if (!string.IsNullOrEmpty(service.ShortDescription))
+                                {
+                                    <p class="service-description-real">@service.ShortDescription</p>
+                                }
+                                <button type="button" class="btn btn-service-real" onclick="viewServiceDetails(@service.ServiceID)"
+                                        aria-label="Xem thêm thông tin về @service.ServiceName">
+                                    XEM THÊM
+                                </button>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <!-- Text on left, image on right -->
+                        <div class="col-lg-8 col-md-7 order-md-1 order-2">
+                            <div class="service-content-real text-md-end">
+                                <h3 class="service-title-real">@service.ServiceName</h3>
+                                @if (!string.IsNullOrEmpty(service.ShortDescription))
+                                {
+                                    <p class="service-description-real">@service.ShortDescription</p>
+                                }
+                                <button type="button" class="btn btn-service-real" onclick="viewServiceDetails(@service.ServiceID)"
+                                        aria-label="Xem thêm thông tin về @service.ServiceName">
+                                    XEM THÊM
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-5 text-center order-md-2 order-1 mb-4 mb-md-0">
+                            <div class="service-image-container-real">
+                                @if (!string.IsNullOrEmpty(service.ImageUrl))
+                                {
+                                    <img src="@service.ImageUrl" alt="@service.ServiceName" class="service-image-real" loading="lazy" />
+                                }
+                                else
+                                {
+                                    <div class="service-image-placeholder-real">
+                                        <i class="fas fa-concierge-bell"></i>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <div class="empty-state-real">
+                    <i class="fas fa-concierge-bell fa-4x text-muted mb-3"></i>
+                    <h3 class="text-muted">Chưa có dịch vụ nào</h3>
+                    <p class="text-muted">Hiện tại chúng tôi đang cập nhật các dịch vụ mới. Vui lòng quay lại sau!</p>
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-primary mt-3">
+                        <i class="fas fa-home me-2"></i>
+                        Về trang chủ
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- Modal hiển thị chi tiết dịch vụ -->
+<div class="modal fade" id="serviceModal" tabindex="-1" aria-labelledby="serviceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold text-primary" id="serviceModalLabel">Chi tiết dịch vụ</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body">
+                <div id="serviceModalContent">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Đang tải...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/services.js"></script>
+} 

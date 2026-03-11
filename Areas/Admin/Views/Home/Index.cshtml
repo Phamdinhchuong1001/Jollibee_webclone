@@ -1,0 +1,1441 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/modern-dashboard.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/dashboard-card-links.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/statistics.css" asp-append-version="true" />
+}
+
+<div class="dashboard">
+    <!-- Date Filter Section -->
+    <div class="date-filter-section mb-4">
+        <div class="date-filter-group">
+            <label for="dashboardDateRange" class="date-filter-label">
+                <i class="fas fa-calendar-alt me-2"></i>Lọc theo thời gian:
+            </label>
+            <select id="dashboardDateRange" class="date-range-select form-select">
+                <option value="today">Hôm nay</option>
+                <option value="week" selected>7 ngày qua</option>
+                <option value="month">Tháng này</option>
+                <option value="quarter">Quý này</option>
+                <option value="year">Năm nay</option>
+            </select>
+        </div>
+        @* <div class="filter-info">
+            <small class="text-muted">
+                <i class="fas fa-info-circle me-1"></i>
+                Dữ liệu sẽ được cập nhật theo khoảng thời gian được chọn
+            </small>
+        </div> *@
+    </div>
+
+    <!-- Enhanced Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-4">
+            <a href="~/Admin/User" class="stats-card-link">
+                <div class="modern-stats-card card-users">
+                    <div class="card-background">
+                        <div class="card-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="stats-info">
+                            <h3 class="stats-number" id="usersCount" data-target="@ViewBag.NewUsersToday">@ViewBag.NewUsersToday</h3>
+                            <h6 class="stats-title">Người dùng mới</h6>
+                        </div>
+                        <div class="stats-trend @(ViewBag.UsersChangePercent >= 0 ? "trend-positive" : "trend-negative")">
+                            <i class="fas @(ViewBag.UsersChangePercent >= 0 ? "fa-arrow-up" : "fa-arrow-down")"></i>
+                            <span class="trend-value" id="usersPercent">@(ViewBag.UsersChangePercent)%</span>
+                            <small class="trend-label">hơn tháng trước</small>
+                        </div>
+                    </div>
+                    <div class="card-hover-indicator">
+                        <i class="fas fa-external-link-alt"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4">
+            <a href="~/Admin/Order" class="stats-card-link">
+                <div class="modern-stats-card card-orders">
+                    <div class="card-background">
+                        <div class="card-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="stats-info">
+                            <h3 class="stats-number" id="ordersCount" data-target="@ViewBag.NewOrdersToday">@ViewBag.NewOrdersToday</h3>
+                            <h6 class="stats-title">Đơn hàng mới</h6>
+                        </div>
+                        <div class="stats-trend @(ViewBag.OrdersChangePercent >= 0 ? "trend-positive" : "trend-negative")">
+                            <i class="fas @(ViewBag.OrdersChangePercent >= 0 ? "fa-arrow-up" : "fa-arrow-down")"></i>
+                            <span class="trend-value" id="ordersPercent">@(ViewBag.OrdersChangePercent)%</span>
+                            <small class="trend-label">so với hôm qua</small>
+                        </div>
+                    </div>
+                    <div class="card-hover-indicator">
+                        <i class="fas fa-external-link-alt"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="modern-stats-card card-revenue">
+                <div class="card-background">
+                    <div class="card-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="stats-info">
+                        <h3 class="stats-number" id="revenueCount" data-target="@ViewBag.TotalRevenue">@ViewBag.TotalRevenue.ToString("N0") đ</h3>
+                        <h6 class="stats-title">Tổng doanh thu</h6>
+                    </div>
+                    <div class="stats-trend @(ViewBag.RevenueChangePercent >= 0 ? "trend-positive" : "trend-negative")">
+                        <i class="fas @(ViewBag.RevenueChangePercent >= 0 ? "fa-arrow-up" : "fa-arrow-down")"></i>
+                        <span class="trend-value" id="revenuePercent">@(ViewBag.RevenueChangePercent)%</span>
+                        <small class="trend-label">so với tuần trước</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4">
+            <a href="~/Admin/Product" class="stats-card-link">
+                <div class="modern-stats-card card-products">
+                    <div class="card-background">
+                        <div class="card-icon">
+                            <i class="fas fa-hamburger"></i>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="stats-info">
+                            <h3 class="stats-number" id="productsCount" data-target="@ViewBag.TotalProducts">@ViewBag.TotalProducts</h3>
+                            <h6 class="stats-title">Sản phẩm</h6>
+                        </div>
+                        <div class="stats-trend @(ViewBag.ProductsChangePercent >= 0 ? "trend-positive" : "trend-negative")">
+                            <i class="fas @(ViewBag.ProductsChangePercent >= 0 ? "fa-arrow-up" : "fa-arrow-down")"></i>
+                            <span class="trend-value" id="productsPercent">@(ViewBag.ProductsChangePercent)%</span>
+                            <small class="trend-label">sản phẩm mới</small>
+                        </div>
+                    </div>
+                    <div class="card-hover-indicator">
+                        <i class="fas fa-external-link-alt"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-section">
+        <!-- Revenue Chart -->
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <div>
+                    <h3 class="chart-card-title">
+                        <i class="fas fa-chart-bar text-primary"></i>
+                        Doanh thu theo ngày
+                    </h3>
+                    <p class="chart-card-subtitle">Biểu đồ doanh thu và sản phẩm bán chạy trong khoảng thời gian</p>
+                </div>
+                <div class="chart-actions">
+                    <button class="chart-btn active" data-type="revenue">Doanh thu</button>
+                    <button class="chart-btn" data-type="orders">Đơn hàng</button>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Order Status Pie Chart -->
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <div>
+                    <h3 class="chart-card-title">
+                        <i class="fas fa-chart-pie text-warning"></i>
+                        Trạng thái đơn hàng
+                    </h3>
+                    <p class="chart-card-subtitle">Tỉ lệ đơn hàng theo trạng thái</p>
+                </div>
+            </div>
+            <div class="pie-chart-container">
+                <canvas id="orderStatusChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <!-- Real-time Updates Indicator -->
+    @* <div class="row mb-4">
+        <div class="col-12">
+            <div class="realtime-indicator">
+                <div class="pulse-dot"></div>
+                <span>Cập nhật thời gian thực</span>
+                <small id="lastUpdate">Cập nhật lần cuối: <span id="updateTime"></span></small>
+            </div>
+        </div>
+    </div> *@
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-bolt text-jollibee-red me-2"></i>
+                        Thao tác nhanh
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <a href="~/Admin/Category/Create" class="quick-action-card">
+                                <div class="quick-action-icon bg-jollibee-red">
+                                    <i class="fas fa-plus"></i>
+                                </div>
+                                <div class="quick-action-content">
+                                    <h6>Thêm danh mục</h6>
+                                    <p>Tạo danh mục mới</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <a href="~/Admin/Product/Create" class="quick-action-card">
+                                <div class="quick-action-icon bg-jollibee-orange">
+                                    <i class="fas fa-hamburger"></i>
+                                </div>
+                                <div class="quick-action-content">
+                                    <h6>Thêm sản phẩm</h6>
+                                    <p>Tạo sản phẩm mới</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <a href="~/Admin/Category" class="quick-action-card">
+                                <div class="quick-action-icon bg-jollibee-yellow">
+                                    <i class="fas fa-list"></i>
+                                </div>
+                                <div class="quick-action-content">
+                                    <h6>Quản lý danh mục</h6>
+                                    <p>Xem tất cả danh mục</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <a href="~/Admin/Product" class="quick-action-card">
+                                <div class="quick-action-icon" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
+                                    <i class="fas fa-box"></i>
+                                </div>
+                                <div class="quick-action-content">
+                                    <h6>Quản lý sản phẩm</h6>
+                                    <p>Xem tất cả sản phẩm</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-clock text-jollibee-red me-2"></i>
+                        Đơn hàng gần đây
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if (ViewBag.RecentOrders != null && ((IEnumerable<dynamic>)ViewBag.RecentOrders).Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Khách hàng</th>
+                                        <th>Tổng tiền</th>
+                                        <th>Ngày đặt</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var order in (IEnumerable<dynamic>)ViewBag.RecentOrders)
+                                    {
+                                        <tr>
+                                            <td>#@order.OrderID</td>
+                                            <td>@order.User?.FullName</td>
+                                            <td>@order.TotalAmount.ToString("C0", new System.Globalization.CultureInfo("vi-VN"))</td>
+                                            <td>@order.OrderDate.ToString("dd/MM/yyyy")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted text-center py-3">Chưa có đơn hàng nào</p>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-star text-jollibee-yellow me-2"></i>
+                        Sản phẩm mới nhất
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if (ViewBag.RecentProducts != null && ((IEnumerable<dynamic>)ViewBag.RecentProducts).Any())
+                    {
+                        <div class="recent-products">
+                            @foreach (var product in (IEnumerable<dynamic>)ViewBag.RecentProducts)
+                            {
+                                <div class="recent-product-item">
+                                    <div class="product-image">
+                                        @if (!string.IsNullOrEmpty(product.ImageUrl))
+                                        {
+                                            <img src="@product.ImageUrl" alt="@product.ProductName" />
+                                        }
+                                        else
+                                        {
+                                            <div class="no-image">
+                                                <i class="fas fa-image"></i>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="product-info">
+                                        <h6>@product.ProductName</h6>
+                                        <p class="text-muted">@product.Category?.CategoryName</p>
+                                        <span class="badge bg-jollibee-red">@product.Price.ToString("C0", new System.Globalization.CultureInfo("vi-VN"))</span>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted text-center py-3">Chưa có sản phẩm nào</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Minimal styles for quick actions and recent products only */
+.quick-action-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.quick-action-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    text-decoration: none;
+    color: inherit;
+}
+
+.quick-action-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.quick-action-content h6 {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.quick-action-content p {
+    margin: 0;
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+
+.recent-product-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.recent-product-item:last-child {
+    border-bottom: none;
+}
+
+.product-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.no-image {
+    width: 100%;
+    height: 100%;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+}
+
+.product-info h6 {
+    margin: 0 0 5px 0;
+    font-size: 0.9rem;
+}
+
+.product-info p {
+    margin: 0 0 5px 0;
+    font-size: 0.8rem;
+}
+
+/* Date Filter Styles */
+.date-filter-section {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+}
+
+.date-filter-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+}
+
+.date-filter-label {
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0;
+    white-space: nowrap;
+    font-size: 1rem;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.date-filter-label i {
+    color: #DC143C;
+}
+
+.date-range-select {
+    min-width: 220px;
+    border-radius: 10px;
+    border: 2px solid #e9ecef;
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #2c3e50;
+    background: white;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    padding-right: 45px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.date-range-select:hover {
+    border-color: #DC143C;
+    box-shadow: 0 4px 8px rgba(220, 20, 60, 0.1);
+    transform: translateY(-1px);
+}
+
+.date-range-select:focus {
+    outline: none;
+    border-color: #DC143C;
+    box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.15), 0 4px 8px rgba(220, 20, 60, 0.1);
+    transform: translateY(-1px);
+}
+
+.date-range-select:active {
+    transform: translateY(0);
+}
+
+/* Custom option styling */
+.date-range-select option {
+    padding: 10px;
+    font-weight: 500;
+    color: #2c3e50;
+    background: white;
+}
+
+.date-range-select option:checked {
+    background: linear-gradient(135deg, #DC143C, #b91c1c);
+    color: white;
+}
+
+/* Enhanced Chart Styles for Better Proportions */
+.charts-section {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.charts-section .chart-card {
+    min-height: 500px;
+    height: auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    background: white;
+    border: none;
+    width: 100%;
+}
+
+.charts-section .chart-container {
+    height: 400px;
+    padding: 20px;
+    width: 100%;
+}
+
+.charts-section .pie-chart-container {
+    height: 400px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.charts-section .chart-card-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #2c3e50;
+}
+
+.charts-section .chart-card-subtitle {
+    font-size: 0.95rem;
+    color: #6c757d;
+    margin-bottom: 0;
+    line-height: 1.4;
+}
+
+.charts-section .chart-card-header {
+    padding: 25px 25px 10px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 15px;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+@@media (max-width: 991.98px) {
+    .charts-section {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+    
+    .charts-section .chart-container,
+    .charts-section .pie-chart-container {
+        height: 320px;
+        padding: 15px;
+    }
+    
+    .charts-section .chart-card {
+        min-height: 420px;
+    }
+    
+    .charts-section .chart-card-header {
+        padding: 20px 20px 10px 20px;
+    }
+}
+
+@@media (max-width: 576px) {
+    .date-filter-section {
+        padding: 15px;
+    }
+    
+    .date-filter-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .date-range-select {
+        width: 100%;
+        min-width: unset;
+        padding: 14px 16px;
+        padding-right: 45px;
+        font-size: 1rem;
+    }
+}
+
+@@media (max-width: 768px) {
+    .date-range-select {
+        min-width: 180px;
+    }
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Modern Dashboard JavaScript
+    initializeDashboard();
+    
+    function initializeDashboard() {
+        animateNumbers();
+        startRealTimeUpdates();
+        addInteractiveEffects();
+    }
+    
+    function animateNumbers() {
+        const numberElements = document.querySelectorAll('.stats-number');
+        
+        numberElements.forEach(element => {
+            const target = parseInt(element.dataset.target) || 0;
+            const duration = 2500;
+            const startTime = performance.now();
+            
+            function updateNumber(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // Easing function for smooth animation
+                const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+                const current = Math.floor(target * easeOutQuart);
+                
+                if (element.id === 'revenueCount') {
+                    element.textContent = current.toLocaleString('vi-VN') + ' đ';
+                } else {
+                    element.textContent = current.toLocaleString('vi-VN');
+                }
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateNumber);
+                } else {
+                    // Add completion effect
+                    element.style.transform = 'scale(1.05)';
+                    setTimeout(() => {
+                        element.style.transform = 'scale(1)';
+                    }, 200);
+                }
+            }
+            
+            // Start animation with delay for staggered effect
+            const delay = Array.from(numberElements).indexOf(element) * 200;
+            setTimeout(() => {
+                requestAnimationFrame(updateNumber);
+            }, delay);
+        });
+    }
+    
+    function startRealTimeUpdates() {
+        updateTime();
+        setInterval(updateTime, 1000); // Chỉ giữ update thời gian thôi
+        
+        // Tắt fake data updates - chỉ update khi có thay đổi thực tế
+        // setInterval(() => {
+        //     updateStatsWithAnimation();
+        // }, 8000);
+        
+        // setInterval(() => {
+        //     updateTrendPercentages();
+        // }, 12000);
+    }
+    
+    function updateTime() {
+        const now = new Date();
+        const timeString = now.toLocaleString('vi-VN', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+        
+        const updateTimeElement = document.getElementById('updateTime');
+        if (updateTimeElement) {
+            updateTimeElement.textContent = timeString;
+        }
+    }
+    
+    // TẮT FAKE DATA UPDATE - chỉ dùng API thật
+    /*
+    function updateStatsWithAnimation() {
+        const stats = [
+            { id: 'usersCount', change: Math.floor(Math.random() * 5) + 1 },
+            { id: 'ordersCount', change: Math.floor(Math.random() * 3) + 1 },
+            { id: 'productsCount', change: Math.floor(Math.random() * 2) + 1 }
+        ];
+        
+        stats.forEach(stat => {
+            const element = document.getElementById(stat.id);
+            if (element) {
+                const currentValue = parseInt(element.textContent.replace(/[^\d]/g, ''));
+                const newValue = currentValue + stat.change;
+                
+                // Add updating class for animation
+                element.classList.add('updating');
+                
+                // Animate to new value
+                setTimeout(() => {
+                    if (stat.id === 'revenueCount') {
+                        element.textContent = newValue.toLocaleString('vi-VN') + ' đ';
+                    } else {
+                        element.textContent = newValue.toLocaleString('vi-VN');
+                    }
+                    
+                    element.classList.remove('updating');
+                }, 300);
+            }
+        });
+        
+        // Show notification
+        showUpdateNotification();
+    }
+    */
+    
+    // TẮT FAKE TREND UPDATE - chỉ dùng API thật
+    /*
+    function updateTrendPercentages() {
+        const trends = [
+            { id: 'usersPercent', min: 8, max: 25 },
+            { id: 'ordersPercent', min: 2, max: 15 },
+            { id: 'revenuePercent', min: 5, max: 20 },
+            { id: 'productsPercent', min: 3, max: 12 }
+        ];
+        
+        trends.forEach(trend => {
+            const element = document.getElementById(trend.id);
+            if (element) {
+                const newPercent = Math.floor(Math.random() * (trend.max - trend.min)) + trend.min;
+                
+                // Add fade effect
+                element.style.opacity = '0.5';
+                setTimeout(() => {
+                    element.textContent = newPercent + '%';
+                    element.style.opacity = '1';
+                }, 150);
+            }
+        });
+    }
+    */
+    
+    function addInteractiveEffects() {
+        const cards = document.querySelectorAll('.modern-stats-card');
+        
+        cards.forEach(card => {
+            // Add click effect
+            card.addEventListener('click', function() {
+                this.style.transform = 'translateY(-8px) scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = 'translateY(-8px) scale(1)';
+                }, 150);
+            });
+            
+            // Add hover sound effect (optional)
+            card.addEventListener('mouseenter', function() {
+                // You can add sound effects here if needed
+                this.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+            });
+        });
+        
+        // Add keyboard navigation
+        cards.forEach((card, index) => {
+            card.setAttribute('tabindex', '0');
+            card.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    this.click();
+                }
+            });
+        });
+    }
+    
+    @* function showUpdateNotification() {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = 'update-notification';
+        notification.innerHTML = `
+            <i class="fas fa-sync-alt"></i>
+            <span>Dá»¯ liá»‡u Ä‘Ã£ Ä‘Æ°á»£c cáº­p nháº­t</span>
+        `;
+        
+        // Style the notification
+        Object.assign(notification.style, {
+            position: 'fixed',
+            top: '20px',
+            right: '20px',
+            background: 'linear-gradient(135deg, #48bb78, #38a169)',
+            color: 'white',
+            padding: '12px 20px',
+            borderRadius: '25px',
+            boxShadow: '0 4px 15px rgba(72, 187, 120, 0.3)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            fontSize: '0.875rem',
+            fontWeight: '600',
+            zIndex: '1000',
+            transform: 'translateX(100%)',
+            transition: 'transform 0.3s ease'
+        });
+        
+        document.body.appendChild(notification);
+        
+        // Animate in
+        setTimeout(() => {
+            notification.style.transform = 'translateX(0)';
+        }, 100);
+        
+        // Animate out and remove
+        setTimeout(() => {
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                notification.remove();
+            }, 300);
+        }, 3000);
+    } *@
+    
+    // Add performance monitoring
+    function monitorPerformance() {
+        const observer = new PerformanceObserver((list) => {
+            const entries = list.getEntries();
+            entries.forEach((entry) => {
+                if (entry.entryType === 'measure') {
+                    console.log(`${entry.name}: ${entry.duration}ms`);
+                }
+            });
+        });
+        
+        observer.observe({ entryTypes: ['measure'] });
+    }
+    
+    // Initialize performance monitoring in development
+    if (window.location.hostname === 'localhost') {
+        monitorPerformance();
+    }
+    
+    // Add progressive enhancement
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                }
+            });
+        });
+        
+        document.querySelectorAll('.modern-stats-card').forEach(card => {
+            observer.observe(card);
+        });
+    }
+    
+    // Enhanced real-time updates with API
+    function fetchStatsFromServer() {
+        return fetch('/Admin/api/GetDashboardStats')
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    return {
+                        users: result.data.users,
+                        orders: result.data.orders,
+                        revenue: result.data.revenue,
+                        products: result.data.products,
+                        trends: result.data.trends
+                    };
+                } else {
+                    throw new Error(result.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching stats:', error);
+                // Return null to indicate API failure - don't update UI
+                return null;
+            });
+    }
+    
+    function updateStatsFromApi() {
+        fetchStatsFromServer().then(data => {
+            if (!data) {
+                console.log('No data received from API - keeping current values');
+                return;
+            }
+            
+            let hasChanges = false;
+            
+            // Update numbers only if they changed
+            const usersElement = document.getElementById('usersCount');
+            const ordersElement = document.getElementById('ordersCount');
+            const revenueElement = document.getElementById('revenueCount');
+            const productsElement = document.getElementById('productsCount');
+            
+            if (usersElement) {
+                const currentValue = parseInt(usersElement.textContent.replace(/[^\d]/g, ''));
+                if (currentValue !== data.users) {
+                    animateNumberUpdate(usersElement, data.users);
+                    hasChanges = true;
+                }
+            }
+            if (ordersElement) {
+                const currentValue = parseInt(ordersElement.textContent.replace(/[^\d]/g, ''));
+                if (currentValue !== data.orders) {
+                    animateNumberUpdate(ordersElement, data.orders);
+                    hasChanges = true;
+                }
+            }
+            if (revenueElement) {
+                const currentValue = parseInt(revenueElement.textContent.replace(/[^\d]/g, ''));
+                if (currentValue !== data.revenue) {
+                    animateNumberUpdate(revenueElement, data.revenue, true);
+                    hasChanges = true;
+                }
+            }
+            if (productsElement) {
+                const currentValue = parseInt(productsElement.textContent.replace(/[^\d]/g, ''));
+                if (currentValue !== data.products) {
+                    animateNumberUpdate(productsElement, data.products);
+                    hasChanges = true;
+                }
+            }
+            
+            // Update trends if available
+            if (data.trends) {
+                const elements = {
+                    'usersPercent': data.trends.usersPercent,
+                    'ordersPercent': data.trends.ordersPercent,
+                    'revenuePercent': data.trends.revenuePercent,
+                    'productsPercent': data.trends.productsPercent
+                };
+                
+                Object.keys(elements).forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        const currentPercent = parseFloat(element.textContent.replace('%', ''));
+                        if (Math.abs(currentPercent - elements[id]) > 0.1) {
+                            element.style.opacity = '0.5';
+                            setTimeout(() => {
+                                element.textContent = elements[id] + '%';
+                                element.style.opacity = '1';
+                            }, 150);
+                            hasChanges = true;
+                        }
+                    }
+                });
+            }
+            
+            // Show update notification only if there are actual changes
+            if (hasChanges) {
+                showApiUpdateNotification();
+            }
+            
+            // Update last update time
+            const updateTimeElement = document.getElementById('updateTime');
+            if (updateTimeElement) {
+                updateTimeElement.textContent = new Date().toLocaleTimeString('vi-VN');
+            }
+        });
+    }
+    
+    function animateNumberUpdate(element, newValue, isCurrency = false) {
+        const currentValue = parseInt(element.textContent.replace(/[^\d]/g, ''));
+        
+        if (currentValue === newValue) return;
+        
+        element.classList.add('updating');
+        
+        const duration = 800;
+        const startTime = performance.now();
+        
+        function updateNumber(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const easeOut = 1 - Math.pow(1 - progress, 3);
+            const current = Math.floor(currentValue + (newValue - currentValue) * easeOut);
+            
+            if (isCurrency) {
+                element.textContent = current.toLocaleString('vi-VN') + ' đ';
+            } else {
+                element.textContent = current.toLocaleString('vi-VN');
+            }
+            
+            if (progress < 1) {
+                requestAnimationFrame(updateNumber);
+            } else {
+                element.classList.remove('updating');
+            }
+        }
+        
+        requestAnimationFrame(updateNumber);
+    }
+    
+    function showApiUpdateNotification() {
+        const notification = document.createElement('div');
+        notification.className = 'api-update-notification';
+        notification.innerHTML = `
+            <i class="fas fa-sync-alt"></i>
+            <span>Dữ liệu đã được cập nhật từ server</span>
+        `;
+        
+        Object.assign(notification.style, {
+            position: 'fixed',
+            top: '20px',
+            right: '20px',
+            background: 'linear-gradient(135deg, #48bb78, #38a169)',
+            color: 'white',
+            padding: '12px 20px',
+            borderRadius: '25px',
+            boxShadow: '0 4px 15px rgba(72, 187, 120, 0.3)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            fontSize: '0.875rem',
+            fontWeight: '600',
+            zIndex: '1000',
+            transform: 'translateX(100%)',
+            transition: 'transform 0.3s ease'
+        });
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.transform = 'translateX(0)';
+        }, 100);
+        
+        setTimeout(() => {
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                notification.remove();
+            }, 200);
+        }, 3000);
+    }
+    
+    // Tắt auto-refresh liên tục - chỉ update khi có thay đổi thực tế
+    // setInterval(updateStatsFromApi, 30000);
+    
+    // Load dữ liệu ban đầu 1 lần khi trang load xong
+    setTimeout(updateStatsFromApi, 2000);
+    
+    // Thêm nút refresh thủ công
+    addManualRefreshButton();
+    
+    // Initialize Charts
+    initializeDashboardCharts();
+    
+    function addManualRefreshButton() {
+        // Tạo nút refresh thủ công
+        const refreshButton = document.createElement('button');
+        refreshButton.innerHTML = '<i class="fas fa-sync-alt"></i> Cập nhật dữ liệu';
+        refreshButton.className = 'btn btn-outline-primary btn-sm ms-2';
+        refreshButton.style.cssText = `
+            position: relative;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        `;
+        
+        // Thêm sự kiện click
+        refreshButton.addEventListener('click', function() {
+            const icon = this.querySelector('i');
+            icon.style.animation = 'spin 1s linear infinite';
+            this.disabled = true;
+            
+            updateStatsFromApi();
+            
+            setTimeout(() => {
+                icon.style.animation = '';
+                this.disabled = false;
+            }, 1500);
+        });
+        
+        // Thêm nút vào header
+        const headerTitle = document.querySelector('.page-title h1');
+        if (headerTitle) {
+            headerTitle.parentNode.appendChild(refreshButton);
+        }
+    }
+});
+
+// Dashboard Charts and Date Filter Functions
+let currentDashboardChart;
+let orderStatusDashboardChart;
+let currentDashboardDateRange = 'week';
+
+function initializeDashboardCharts() {
+    // Load initial data
+    loadDashboardChartsData('week');
+    
+    // Setup date range change handler
+    document.getElementById('dashboardDateRange').addEventListener('change', function() {
+        const dateRange = this.value;
+        currentDashboardDateRange = dateRange;
+        
+        // Update both cards and charts
+        updateDashboardData(dateRange);
+        loadDashboardChartsData(dateRange);
+    });
+    
+    // Setup chart toggle buttons
+    const chartButtons = document.querySelectorAll('.chart-btn');
+    chartButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            chartButtons.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            const type = this.dataset.type;
+            toggleDashboardChart(type);
+        });
+    });
+}
+
+function updateDashboardData(dateRange) {
+    // Update the card data based on selected date range
+    fetch(`/Admin/api/GetDashboardStats?dateRange=${dateRange}`)
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                // Update card values with animation
+                const data = result.data;
+                
+                const usersElement = document.getElementById('usersCount');
+                const ordersElement = document.getElementById('ordersCount');
+                const revenueElement = document.getElementById('revenueCount');
+                const productsElement = document.getElementById('productsCount');
+                
+                if (usersElement && data.users !== undefined) {
+                    animateNumberUpdate(usersElement, data.users);
+                }
+                if (ordersElement && data.orders !== undefined) {
+                    animateNumberUpdate(ordersElement, data.orders);
+                }
+                if (revenueElement && data.revenue !== undefined) {
+                    animateNumberUpdate(revenueElement, data.revenue, true);
+                }
+                if (productsElement && data.products !== undefined) {
+                    animateNumberUpdate(productsElement, data.products);
+                }
+                
+                // Update trend indicators
+                if (data.trends) {
+                    updateTrendIndicator('usersPercent', data.trends.usersPercent);
+                    updateTrendIndicator('ordersPercent', data.trends.ordersPercent);
+                    updateTrendIndicator('revenuePercent', data.trends.revenuePercent);
+                    updateTrendIndicator('productsPercent', data.trends.productsPercent);
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error updating dashboard data:', error);
+        });
+}
+
+function updateTrendIndicator(elementId, changePercent) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.textContent = changePercent + '%';
+        
+        // Update trend arrow and color
+        const trendContainer = element.closest('.stats-trend');
+        const arrow = trendContainer.querySelector('i');
+        
+        if (changePercent > 0) {
+            arrow.className = 'fas fa-arrow-up';
+            trendContainer.className = 'stats-trend trend-positive';
+        } else if (changePercent < 0) {
+            arrow.className = 'fas fa-arrow-down';
+            trendContainer.className = 'stats-trend trend-negative';
+        } else {
+            arrow.className = 'fas fa-minus';
+            trendContainer.className = 'stats-trend trend-neutral';
+        }
+    }
+}
+
+// Load dashboard charts data
+async function loadDashboardChartsData(dateRange = 'week') {
+    try {
+        // Load revenue chart data
+        const revenueResponse = await fetch(`/Admin/Statistics/GetRevenueChartData?dateRange=${dateRange}`);
+        const revenueData = await revenueResponse.json();
+        
+        // Load order status chart data
+        const orderStatusResponse = await fetch(`/Admin/Statistics/GetOrderStatusData?dateRange=${dateRange}`);
+        const orderStatusData = await orderStatusResponse.json();
+        
+        // Create/update revenue chart
+        createDashboardRevenueChart(revenueData);
+        
+        // Create/update order status chart
+        createDashboardOrderStatusChart(orderStatusData);
+        
+    } catch (error) {
+        console.error('Error loading dashboard charts data:', error);
+    }
+}
+
+function createDashboardRevenueChart(data) {
+    const revenueData = {
+        labels: data.labels,
+        datasets: [{
+            label: 'Doanh thu (VNĐ)',
+            data: data.revenueData,
+            borderColor: '#DC143C',
+            backgroundColor: 'rgba(220, 20, 60, 0.1)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: '#DC143C',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 6,
+            pointHoverRadius: 8
+        }]
+    };
+
+    const orderData = {
+        labels: data.labels,
+        datasets: [{
+            label: 'Số đơn hàng',
+            data: data.orderData,
+            borderColor: '#007bff',
+            backgroundColor: 'rgba(0, 123, 255, 0.1)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: '#007bff',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 6,
+            pointHoverRadius: 8
+        }]
+    };
+
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+    if (currentDashboardChart) {
+        currentDashboardChart.destroy();
+    }
+
+    currentDashboardChart = new Chart(ctx, {
+        type: 'line',
+        data: revenueData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                intersect: false,
+                mode: 'index'
+            },
+            plugins: {
+                tooltip: {
+                    backgroundColor: 'white',
+                    titleColor: 'red',
+                    bodyColor: '#4E4D4DFF',
+                    borderColor: '#DC143C',
+                    borderWidth: 1,
+                    cornerRadius: 8,
+                    displayColors: false,
+                    callbacks: {
+                        label: function(context) {
+                            const dataIndex = context.dataIndex;
+                            const value = context.parsed.y;
+                            
+                            if (data.bestSellingProducts && data.bestSellingProducts[dataIndex]) {
+                                const bestSellingData = data.bestSellingProducts[dataIndex];
+                                return [
+                                    `Doanh thu: ${value.toLocaleString('vi-VN')} VNĐ`,
+                                    `Sản phẩm bán chạy: ${bestSellingData.bestProduct}`,
+                                    `Đã bán: ${bestSellingData.bestProductSold} phần`
+                                ];
+                            } else {
+                                return `Doanh thu: ${value.toLocaleString('vi-VN')} VNĐ`;
+                            }
+                        }
+                    }
+                },
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: '#6c757d'
+                    }
+                },
+                y: {
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)'
+                    },
+                    ticks: {
+                        color: '#6c757d',
+                        callback: function(value) {
+                            return (value / 1000000).toFixed(1) + 'M';
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Store data for toggling
+    currentDashboardChart.revenueData = revenueData;
+    currentDashboardChart.orderData = orderData;
+    currentDashboardChart.bestSellingData = data.bestSellingProducts;
+}
+
+function createDashboardOrderStatusChart(data) {
+    const ctx = document.getElementById('orderStatusChart').getContext('2d');
+    if (orderStatusDashboardChart) {
+        orderStatusDashboardChart.destroy();
+    }
+
+    orderStatusDashboardChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: data.labels,
+            datasets: [{
+                data: data.data,
+                backgroundColor: [
+                    '#E0E0E0FF',
+                    '#FFCA2BFF', 
+                    '#15ACC3FF',
+                    '#AFFF2EFF',
+                    '#2AC24DFF',
+                    '#dc3545'
+                ],
+                borderWidth: 0,
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                tooltip: {
+                    backgroundColor: 'white',
+                    titleColor: 'red',
+                    bodyColor: '#4E4D4DFF',
+                    borderColor: '#DC143C',
+                    borderWidth: 1,
+                    cornerRadius: 8,
+                    callbacks: {
+                        label: function(context) {
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = ((context.parsed / total) * 100).toFixed(1);
+                            return `${context.label}: ${context.parsed} đơn (${percentage}%)`;
+                        }
+                    }
+                },
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 20,
+                        color: '#212529'
+                    }
+                }
+            },
+            cutout: '60%'
+        }
+    });
+}
+
+function toggleDashboardChart(type) {
+    if (currentDashboardChart) {
+        if (type === 'revenue') {
+            currentDashboardChart.data = currentDashboardChart.revenueData;
+            // Update tooltip for revenue
+            currentDashboardChart.options.plugins.tooltip.callbacks.label = function(context) {
+                const dataIndex = context.dataIndex;
+                const value = context.parsed.y;
+                
+                if (currentDashboardChart.bestSellingData && currentDashboardChart.bestSellingData[dataIndex]) {
+                    const bestSellingData = currentDashboardChart.bestSellingData[dataIndex];
+                    return [
+                        `Doanh thu: ${value.toLocaleString('vi-VN')} VNĐ`,
+                        `Sản phẩm bán chạy: ${bestSellingData.bestProduct}`,
+                        `Đã bán: ${bestSellingData.bestProductSold} phần`
+                    ];
+                } else {
+                    return `Doanh thu: ${value.toLocaleString('vi-VN')} VNĐ`;
+                }
+            };
+            currentDashboardChart.options.scales.y.ticks.callback = function(value) {
+                return (value / 1000000).toFixed(1) + 'M';
+            };
+        } else {
+            currentDashboardChart.data = currentDashboardChart.orderData;
+            // Update tooltip for orders
+            currentDashboardChart.options.plugins.tooltip.callbacks.label = function(context) {
+                const dataIndex = context.dataIndex;
+                const value = context.parsed.y;
+                
+                if (currentDashboardChart.bestSellingData && currentDashboardChart.bestSellingData[dataIndex]) {
+                    const bestSellingData = currentDashboardChart.bestSellingData[dataIndex];
+                    return [
+                        `Số đơn hàng: ${value}`,
+                        `Sản phẩm bán chạy: ${bestSellingData.bestProduct}`,
+                        `Đã bán: ${bestSellingData.bestProductSold} phần`
+                    ];
+                } else {
+                    return `Số đơn hàng: ${value}`;
+                }
+            };
+            currentDashboardChart.options.scales.y.ticks.callback = function(value) {
+                return Math.round(value);
+            };
+        }
+        currentDashboardChart.update();
+    }
+}
+
+// CSS đã được load từ file riêng: dashboard-card-links.css
+</script>
+
+
+

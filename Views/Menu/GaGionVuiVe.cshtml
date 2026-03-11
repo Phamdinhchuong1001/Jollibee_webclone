@@ -1,0 +1,456 @@
+@{
+    ViewData["Title"] = "Gà Giòn Vui Vẻ";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/menu-common.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/menu-card-common.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/ga-gion-vui-ve.css" asp-append-version="true" />
+}
+
+<div class="ga-gion-hero">
+    <div class="ga-gion-hero-content">
+        <h1>Gà Giòn Vui Vẻ</h1>
+        <p>Thưởng thức gà rán giòn tan, đậm đà hương vị tại Jollibee!</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row" id="menuList">
+        <!-- Menu items will be dynamically populated -->
+    </div>
+</div>
+
+<!-- Modal for product options -->
+<div class="modal fade" id="orderOptionsModal" tabindex="-1" aria-labelledby="orderOptionsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="orderOptionsModalLabel">Tùy chọn combo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="orderOptionsForm">
+          <!-- Options will be dynamically populated -->
+        </form>
+      </div>
+      <div class="modal-footer">
+        <div class="d-flex justify-content-between align-items-center w-100">
+          <div class="total-price-display">
+            <span class="text-muted">Tổng tiền:</span>
+            <span class="fw-bold text-danger fs-4" id="comboTotalPrice">0đ</span>
+          </div>
+          <div>
+            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Đóng</button>
+            <button type="button" class="btn btn-danger" id="addToCartBtn">
+              <i class="fas fa-shopping-cart"></i> Thêm vào giỏ hàng
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+    /* Combo price styling */
+    .price-container {
+        margin-bottom: 1.2rem;
+        position: relative;
+        transition: transform 0.2s ease;
+    }
+    
+    .menu-card:hover .price-container {
+        transform: scale(1.05);
+    }
+    
+    .original-price {
+        color: #999;
+        font-size: 1rem;
+        text-decoration: line-through;
+        margin-bottom: 0.3rem;
+        font-weight: 500;
+    }
+    
+    .current-price {
+        color: #ff9800;
+        font-size: 1.3rem;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+        display: inline-block;
+        margin-right: 8px;
+    }
+    
+    .discount-badge {
+        display: inline-block;
+        background: #ffc107;
+        color: #333;
+        padding: 2px 6px;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        vertical-align: middle;
+        margin-left: 4px;
+    }
+    
+    @@media (max-width: 768px) {
+        .original-price {
+            font-size: 0.9rem;
+        }
+        .current-price {
+            font-size: 1.2rem;
+        }
+        .discount-badge {
+            font-size: 0.75rem;
+            padding: 1px 4px;
+        }
+    }
+</style>
+
+@section Scripts {
+    <script>
+        function renderMenuList(menuItems) {
+            const menuList = document.getElementById('menuList');
+            menuList.innerHTML = menuItems.map(item => {
+                const isCombo = item.isConfigurable;
+                const buttonClass = isCombo ? 'btn btn-order' : 'btn btn-order-simple';
+                const buttonAttributes = isCombo 
+                    ? `data-product-id="${item.productID}" data-bs-toggle="modal" data-bs-target="#orderOptionsModal"` 
+                    : `data-product-id="${item.productID}" data-product-name="${item.productName}" data-product-price="${item.price}"`;
+                
+                // Sử dụng giá thật từ database
+                let priceHTML = '';
+                if (isCombo && item.originalPrice && item.originalPrice > item.price) {
+                    const currentPrice = item.price;
+                    const originalPrice = item.originalPrice;
+                    const discountPercent = Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
+                    
+                    priceHTML = `
+                        <div class="price-container">
+                            <div class="original-price">${originalPrice.toLocaleString()} đ</div>
+                            <div class="current-price">${currentPrice.toLocaleString()} đ</div>
+                            <div class="discount-badge">-${discountPercent}%</div>
+                        </div>
+                    `;
+                } else {
+                    priceHTML = `<div class="menu-price">${item.price.toLocaleString()} đ</div>`;
+                }
+                
+                return `
+                    <div class="col-md-6 col-lg-4">
+                        <div class="menu-card">
+                            ${isCombo ? '<div class="combo-badge">COMBO</div>' : ''}
+                            <img src="${item.imageUrl || item.thumbnailUrl || '/assets/images/default.png'}" alt="${item.productName}" class="menu-img">
+                            <div class="menu-content">
+                                <h3>${item.productName}</h3>
+                                <div class="menu-info">${item.shortDescription || ''}</div>
+                                ${priceHTML}
+                                <button class="${buttonClass}" ${buttonAttributes}>
+                                    ${isCombo ? 'TÙY CHỌN' : 'ĐẶT HÀNG'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Lấy danh sách sản phẩm Gà Giòn Vui Vẻ từ API
+        fetch('/Menu/GetGaGionVuiVeItems')
+            .then(res => res.json())
+            .then(data => {
+                console.log('📦 Loaded Gà Giòn Vui Vẻ menu items:', data);
+                renderMenuList(data);
+            })
+            .catch(err => {
+                console.error('❌ Error loading Gà Giòn Vui Vẻ menu items:', err);
+                document.getElementById('menuList').innerHTML = '<div class="text-danger">Không thể tải danh sách sản phẩm!</div>';
+            });
+
+        // Render động các nhóm cấu hình và option vào modal
+        function renderComboOptions(combo) {
+            const form = document.getElementById('orderOptionsForm');
+            if (!combo || !combo.groups || combo.groups.length === 0) {
+                form.innerHTML = '<div class="text-danger">Không có tùy chọn cho combo này.</div>';
+                return;
+            }
+            
+            // Store combo data globally for price calculation
+            window.currentCombo = combo;
+            
+            let html = '';
+            combo.groups.forEach((group, groupIdx) => {
+                html += `<div class="mb-3">
+                    <label class="form-label fw-bold">${group.groupName}</label>
+                    <div>`;
+                group.options.forEach((option, optIdx) => {
+                    const inputId = `group${group.configGroupID}-option${option.configOptionID}`;
+                    const checked = option.isDefault || optIdx === 0 ? 'checked' : '';
+                    html += `
+                        <input type="radio" class="btn-check option-radio" name="group${group.configGroupID}" id="${inputId}" 
+                               data-price="${option.priceAdjustment || 0}" autocomplete="off" ${checked}
+                               onchange="updateComboPrice()">
+                        <label class="btn btn-outline-danger mb-2" for="${inputId}">
+                            ${option.productImage ? `<img src="${option.productImage}" alt="${option.productName}" width="50">` : ''}
+                            ${option.productName}
+                            ${option.variantName ? `(${option.variantName})` : ''}
+                            ${option.priceAdjustment && option.priceAdjustment > 0 ? `(+${option.priceAdjustment.toLocaleString()}đ)` : ''}
+                        </label>`;
+                });
+                html += '</div></div>';
+            });
+            // Số lượng
+            html += `<div class="mb-3">
+                <label class="form-label fw-bold">Số lượng</label>
+                <div class="input-group" style="max-width: 150px;">
+                  <button class="btn btn-outline-secondary" type="button" id="qtyMinus" onclick="changeQuantity(-1)">-</button>
+                  <input type="number" class="form-control text-center" id="orderQty" value="1" min="1" onchange="updateComboPrice()">
+                  <button class="btn btn-outline-secondary" type="button" id="qtyPlus" onclick="changeQuantity(1)">+</button>
+                </div>
+              </div>`;
+            form.innerHTML = html;
+            
+            // Calculate initial price
+            updateComboPrice();
+        }
+
+        // Calculate and update combo total price
+        function updateComboPrice() {
+            if (!window.currentCombo) {
+                console.warn('⚠️ No current combo data');
+                return;
+            }
+            
+            const basePrice = window.currentCombo.basePrice || 0;
+            console.log('💰 Calculating combo price:');
+            console.log('💰 Current combo:', window.currentCombo);
+            console.log('💰 Base price:', basePrice);
+            
+            if (basePrice === 0) {
+                console.warn('⚠️ No base price found for combo:', window.currentCombo);
+            }
+            let totalPrice = basePrice;
+            
+            // Add price adjustments from selected options
+            const selectedRadios = document.querySelectorAll('.option-radio:checked');
+            let totalAdjustments = 0;
+            selectedRadios.forEach(radio => {
+                const priceAdjustment = parseFloat(radio.getAttribute('data-price')) || 0;
+                totalAdjustments += priceAdjustment;
+                totalPrice += priceAdjustment;
+                console.log('💰 Option adjustment:', priceAdjustment, 'from radio:', radio);
+            });
+            
+            // Multiply by quantity
+            const quantity = parseInt(document.getElementById('orderQty').value) || 1;
+            totalPrice *= quantity;
+            
+            console.log('💰 Final calculation: basePrice=' + basePrice + ' + adjustments=' + totalAdjustments + ' × quantity=' + quantity + ' = ' + totalPrice);
+            
+            // Update display
+            document.getElementById('comboTotalPrice').textContent = totalPrice.toLocaleString() + 'đ';
+        }
+
+        // Change quantity helper function
+        function changeQuantity(delta) {
+            const qtyInput = document.getElementById('orderQty');
+            let currentQty = parseInt(qtyInput.value) || 1;
+            const newQty = Math.max(1, currentQty + delta);
+            qtyInput.value = newQty;
+            updateComboPrice();
+        }
+
+        // Render động các nhóm cấu hình và option vào modal
+        function renderComboOptions(combo) {
+            const form = document.getElementById('orderOptionsForm');
+            if (!combo || !combo.groups || combo.groups.length === 0) {
+                form.innerHTML = '<div class="text-danger">Không có tùy chọn cho combo này.</div>';
+                return;
+            }
+            
+            // Store combo data globally for price calculation
+            window.currentCombo = combo;
+            
+            let html = '';
+            combo.groups.forEach((group, groupIdx) => {
+                html += `<div class="mb-3">
+                    <label class="form-label fw-bold">${group.groupName}</label>
+                    <div>`;
+                group.options.forEach((option, optIdx) => {
+                    const inputId = `group${group.configGroupID}-option${option.configOptionID}`;
+                    const checked = option.isDefault || optIdx === 0 ? 'checked' : '';
+                    html += `
+                        <input type="radio" class="btn-check option-radio" name="group${group.configGroupID}" id="${inputId}" 
+                               data-price="${option.priceAdjustment || 0}" autocomplete="off" ${checked}
+                               onchange="updateComboPrice()">
+                        <label class="btn btn-outline-danger mb-2" for="${inputId}">
+                            ${option.productImage ? `<img src="${option.productImage}" alt="${option.productName}" width="50">` : ''}
+                            ${option.productName}
+                            ${option.variantName ? `(${option.variantName})` : ''}
+                            ${option.priceAdjustment && option.priceAdjustment > 0 ? `(+${option.priceAdjustment.toLocaleString()}đ)` : ''}
+                        </label>`;
+                });
+                html += '</div></div>';
+            });
+            // Số lượng
+            html += `<div class="mb-3">
+                <label class="form-label fw-bold">Số lượng</label>
+                <div class="input-group" style="max-width: 150px;">
+                  <button class="btn btn-outline-secondary" type="button" id="qtyMinus" onclick="changeQuantity(-1)">-</button>
+                  <input type="number" class="form-control text-center" id="orderQty" value="1" min="1" onchange="updateComboPrice()">
+                  <button class="btn btn-outline-secondary" type="button" id="qtyPlus" onclick="changeQuantity(1)">+</button>
+                </div>
+              </div>`;
+            form.innerHTML = html;
+            
+            // Calculate initial price
+            updateComboPrice();
+        }
+
+        // Global variable to store current product being configured
+        let currentProductId = null;
+
+        // Update the event listener for order buttons to handle both combo and regular products
+        document.addEventListener('click', function(e) {
+            if (e.target && e.target.classList.contains('btn-order')) {
+                // Handle combo products (open modal)
+                currentProductId = parseInt(e.target.getAttribute('data-product-id'));
+                
+                // Reset modal title
+                document.getElementById('orderOptionsModalLabel').textContent = 'Tùy chọn combo';
+                
+                const productId = e.target.getAttribute('data-product-id');
+                fetch(`/Menu/GetComboOptions?productId=${productId}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data && data.productName) {
+                            document.getElementById('orderOptionsModalLabel').textContent = `Tùy chọn - ${data.productName}`;
+                        }
+                        
+                        // Store base product info for price calculation BEFORE rendering
+                        const productCard = e.target.closest('.menu-card');
+                        // For combo products, get current price; for regular products, get menu price
+                        const priceElement = productCard.querySelector('.current-price') || productCard.querySelector('.menu-price');
+                        const priceText = priceElement.textContent;
+                        const basePrice = parseInt(priceText.replace(/[^\d]/g, ''));
+                        
+                        console.log('🏷️ Product card price text:', priceText);
+                        console.log('🏷️ Parsed base price:', basePrice);
+                        
+                        // Add basePrice to data before storing
+                        if (data) {
+                            data.basePrice = basePrice;
+                        }
+                        
+                        renderComboOptions(data);
+                    })
+                    .catch(err => {
+                        document.getElementById('orderOptionsForm').innerHTML = '<div class="text-danger">Không thể tải tùy chọn combo!</div>';
+                    });
+            } else if (e.target && e.target.classList.contains('btn-order-simple')) {
+                // Handle regular products (add directly to cart)
+                const productId = parseInt(e.target.getAttribute('data-product-id'));
+                const productName = e.target.getAttribute('data-product-name');
+                const productPrice = e.target.getAttribute('data-product-price');
+                
+                // Disable button temporarily
+                const originalText = e.target.innerHTML;
+                e.target.disabled = true;
+                e.target.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang thêm...';
+                
+                // Add to cart with no configuration options
+                console.log('🛒 Adding regular product to cart:', {productId, productName, productPrice});
+                
+                window.jollibeeCart.addToCart(productId, 1, [])
+                    .then(success => {
+                        console.log('🛒 Add to cart result:', success);
+                        if (success) {
+                            // Show success feedback
+                            e.target.innerHTML = '<i class="fas fa-check"></i> Đã thêm!';
+                            setTimeout(() => {
+                                e.target.innerHTML = originalText;
+                                e.target.disabled = false;
+                            }, 1500);
+                        } else {
+                            alert('Không thể thêm vào giỏ hàng. Vui lòng thử lại.');
+                            e.target.innerHTML = originalText;
+                            e.target.disabled = false;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('❌ Error adding regular product to cart:', error);
+                        alert('Có lỗi xảy ra. Vui lòng thử lại.');
+                        e.target.innerHTML = originalText;
+                        e.target.disabled = false;
+                    });
+            }
+        });
+
+        // Add to cart functionality
+        document.getElementById('addToCartBtn').addEventListener('click', async function() {
+            // Check if we're in editing mode (cart edit) or adding new item
+            const isEditingMode = window.jollibeeCart && window.jollibeeCart.editingCartItemId;
+            
+            if (isEditingMode) {
+                // Call cart's save method for editing
+                await window.jollibeeCart.saveItemChanges();
+                return;
+            }
+            
+            // Regular add to cart flow
+            if (!currentProductId) {
+                alert('Vui lòng chọn sản phẩm');
+                return;
+            }
+
+            // Get quantity
+            const quantity = parseInt(document.getElementById('orderQty').value) || 1;
+            
+            // Get selected options
+            const selectedOptions = [];
+            const form = document.getElementById('orderOptionsForm');
+            const radioGroups = form.querySelectorAll('input[type="radio"]:checked');
+            
+            radioGroups.forEach(radio => {
+                const optionData = radio.id.match(/group(\d+)-option(\d+)/);
+                if (optionData) {
+                    const configGroupID = parseInt(optionData[1]);
+                    const configOptionID = parseInt(optionData[2]);
+                    selectedOptions.push({
+                        ConfigGroupID: configGroupID,
+                        ConfigOptionID: configOptionID,
+                        OptionProductID: 0, // Will be populated by backend
+                        VariantID: null // Will be populated by backend
+                    });
+                }
+            });
+
+            // Disable button to prevent double-click
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang thêm...';
+
+            try {
+                // Add to cart using global cart instance
+                const success = await window.jollibeeCart.addToCart(currentProductId, quantity, selectedOptions);
+                
+                if (success) {
+                    // Close modal
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('orderOptionsModal'));
+                    modal.hide();
+                    
+                    // Reset form
+                    currentProductId = null;
+                } else {
+                    alert('Không thể thêm vào giỏ hàng. Vui lòng thử lại.');
+                }
+            } catch (error) {
+                console.error('Error adding to cart:', error);
+                alert('Có lỗi xảy ra. Vui lòng thử lại.');
+            } finally {
+                // Re-enable button
+                this.disabled = false;
+                this.innerHTML = '<i class="fas fa-shopping-cart"></i> Thêm vào giỏ hàng';
+            }
+        });
+    </script>
+} 

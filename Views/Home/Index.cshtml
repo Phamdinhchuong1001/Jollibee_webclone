@@ -1,0 +1,883 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<!-- Thêm link CSS cho phần hôm nay ăn gì -->
+<link rel="stylesheet" href="/css/today-menu.css">
+<!-- Thêm link CSS cho phần tìm cửa hàng mới -->
+<link rel="stylesheet" href="/css/home-store-finder.css">
+<!-- Thêm link CSS cho phần tin tức trang chủ -->
+<link rel="stylesheet" href="/css/home-news.css">
+<!-- Thêm link CSS cho modal voucher reward -->
+<link rel="stylesheet" href="/css/voucher-reward.css">
+
+<!-- Jollibee-style Full-Width Slider with Only Button on Each Banner -->
+<div id="jollibeeCarousel" class="carousel slide mb-4" data-bs-ride="carousel" style="width:100vw;position:relative;left:50%;right:50%;margin-left:-50vw;margin-right:-50vw;">
+  <!-- Carousel indicators -->
+  <div class="carousel-indicators" style="bottom: 10px;">
+    <button type="button" data-bs-target="#jollibeeCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#jollibeeCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#jollibeeCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    <button type="button" data-bs-target="#jollibeeCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+    <button type="button" data-bs-target="#jollibeeCarousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
+    <button type="button" data-bs-target="#jollibeeCarousel" data-bs-slide-to="5" aria-label="Slide 6"></button>
+  </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active position-relative">
+      <img src="/assets/images/banner1_trangchu.jpg" class="d-block w-100" alt="Banner 1">
+      <a href="#" class="btn btn-warning btn-lg fw-bold position-absolute" style="right: 2.5%; bottom: 5%; font-size: 1.2rem; color: #e31937; background: #ffc627; border: none; border-radius: 30px; box-shadow: 0 2px 8px rgba(255,198,39,0.18); z-index: 2;">Đặt Món Ngay</a>
+    </div>
+    <div class="carousel-item position-relative">
+      <img src="/assets/images/banner2_trangchu.jpg" class="d-block w-100" alt="Banner 2">
+      <a href="#" class="btn btn-warning btn-lg fw-bold position-absolute" style="right: 2.5%; bottom: 5%; font-size: 1.2rem; color: #e31937; background: #ffc627; border: none; border-radius: 30px; box-shadow: 0 2px 8px rgba(255,198,39,0.18); z-index: 2;">Đặt Món Ngay</a>
+    </div>
+    <div class="carousel-item position-relative">
+      <img src="/assets/images/banner3_trangchu.jpg" class="d-block w-100" alt="Banner 3">
+      <a href="#" class="btn btn-warning btn-lg fw-bold position-absolute" style="right: 2.5%; bottom: 5%; font-size: 1.2rem; color: #e31937; background: #ffc627; border: none; border-radius: 30px; box-shadow: 0 2px 8px rgba(255,198,39,0.18); z-index: 2;">Đặt Món Ngay</a>
+    </div>
+    <div class="carousel-item position-relative">
+      <img src="/assets/images/banner4_trangchu.jpg" class="d-block w-100" alt="Banner 4">
+      <a href="#" class="btn btn-warning btn-lg fw-bold position-absolute" style="right: 2.5%; bottom: 5%; font-size: 1.2rem; color: #e31937; background: #ffc627; border: none; border-radius: 30px; box-shadow: 0 2px 8px rgba(255,198,39,0.18); z-index: 2;">Đặt Món Ngay</a>
+    </div>
+    <div class="carousel-item position-relative">
+      <img src="/assets/images/banner5_trangchu.jpg" class="d-block w-100" alt="Banner 5">
+      <a href="#" class="btn btn-warning btn-lg fw-bold position-absolute" style="right: 2.5%; bottom: 5%; font-size: 1.2rem; color: #e31937; background: #ffc627; border: none; border-radius: 30px; box-shadow: 0 2px 8px rgba(255,198,39,0.18); z-index: 2;">Đặt Món Ngay</a>
+    </div>
+    <div class="carousel-item position-relative">
+      <img src="/assets/images/banner6_trangchu.png" class="d-block w-100" alt="Banner 6">
+      <a href="#" class="btn btn-warning btn-lg fw-bold position-absolute" style="right: 2.5%; bottom: 5%; font-size: 1.2rem; color: #e31937; background: #ffc627; border: none; border-radius: 30px; box-shadow: 0 2px 8px rgba(255,198,39,0.18); z-index: 2;">Đặt Món Ngay</a>
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#jollibeeCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#jollibeeCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+<!-- End Jollibee-style Full-Width Slider with Only Button on Each Banner -->
+
+<!-- KẾT THÚC: Jollibee-style Full-Width Slider with Only Button on Each Banner -->
+<!-- BẮT ĐẦU: Hôm nay ăn gì (Làm đẹp, hiện đại, có animation hover, thêm mô tả từng món) -->
+<div class="widget-today-menu-wrapper" style="margin-top: -32px;">
+    <div class="today-menu-content">
+        <div class="intro-wrapper">
+            <div class="intro">
+                <div class="logo">
+                    <img src="/assets/images/logo_jollibee.png" alt="Jollibee Logo">
+                </div>
+                <p class="title">ĂN GÌ HÔM NAY</p>
+                <p class="description">Thực đơn Jollibee đa dạng và phong phú, có rất nhiều sự lựa chọn cho bạn, gia đình và bạn bè.</p>
+            </div>
+        </div>
+        <div class="main-menu-wrapper">
+            <div class="quad-menu">
+                <div class="quad menu today-menu-item" onclick="window.location.href='@Url.Action("GaGionVuiVe", "Menu")'">
+                    <div class="top-img-wrapper">
+                        <img src="/assets/images/ga_gion_vui_ve.png" alt="Gà Giòn Vui Vẻ">
+                    </div>
+                    <div class="bottom-img-wrapper">
+                        <div class="item-title">Gà Giòn Vui Vẻ</div>
+                        <div class="item-desc">Miếng gà giòn rụm, thơm ngon, chuẩn vị Jollibee, phù hợp cho mọi lứa tuổi.</div>
+                        <button class="btn btn-orange text-uppercase btn-order" onclick="event.stopPropagation(); window.location.href='@Url.Action("GaGionVuiVe", "Menu")'">Đặt hàng</button>
+                    </div>
+                </div>
+                <div class="quad menu today-menu-item" onclick="window.location.href='@Url.Action("GaSotCay", "Menu")'">
+                    <div class="top-img-wrapper">
+                        <img src="/assets/images/ga_sot_cay.png" alt="Gà Sốt Cay">
+                    </div>
+                    <div class="bottom-img-wrapper">
+                        <div class="item-title">Gà Sốt Cay</div>
+                        <div class="item-desc">Gà giòn phủ sốt cay đậm đà, kích thích vị giác, dành cho tín đồ yêu vị cay.</div>
+                        <button class="btn btn-orange text-uppercase btn-order" onclick="event.stopPropagation(); window.location.href='@Url.Action("GaSotCay", "Menu")'">Đặt hàng</button>
+                    </div>
+                </div>
+                <div class="quad menu today-menu-item" onclick="window.location.href='@Url.Action("MiYJolly", "Menu")'">
+                    <div class="top-img-wrapper">
+                        <img src="/assets/images/mi_y_jolly.png" alt="Mỳ Ý Sốt Bò Bằm">
+                    </div>
+                    <div class="bottom-img-wrapper">
+                        <div class="item-title">Mỳ Ý Sốt Bò Bằm</div>
+                        <div class="item-desc">Sợi mì Ý dai ngon hòa quyện cùng sốt bò bằm đặc trưng, hấp dẫn và đúng vị Ý.</div>
+                        <button class="btn btn-orange text-uppercase btn-order" onclick="event.stopPropagation(); window.location.href='@Url.Action("MiYJolly", "Menu")'">Đặt hàng</button>
+                    </div>
+                </div>
+                <div class="quad menu today-menu-item" onclick="window.location.href='@Url.Action("MonTrangMieng", "Menu")'">
+                    <div class="top-img-wrapper">
+                        <img src="/assets/images/mon_trang_mieng.png" alt="Món tráng miệng">
+                    </div>
+                    <div class="bottom-img-wrapper">
+                        <div class="item-title">Món Tráng Miệng</div>
+                        <div class="item-desc">Kem tươi mát lạnh, kết hợp topping hấp dẫn, ngọt ngào cho bữa ăn trọn vẹn.</div>
+                        <button class="btn btn-orange text-uppercase btn-order" onclick="event.stopPropagation(); window.location.href='@Url.Action("MonTrangMieng", "Menu")'">Đặt hàng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- KẾT THÚC: Hôm nay ăn gì -->
+
+<!-- BẮT ĐẦU: Dịch vụ Jollibee -->
+<link rel="stylesheet" href="/css/service-section.css">
+<div class="widget-service-wrapper">
+    <div class="title-wrapper">
+        <p class="title">DỊCH VỤ</p>
+        <p class="description">TẬN HƯỞNG NHỮNG KHOẢNH KHẮC TRỌN VẸN CÙNG JOLLIBEE</p>
+    </div>
+    <div class="content-service">
+        <div class="service-entry">
+            <div class="media max-width">
+                <a class="media-center" href="@Url.Action("Index", "Service")">
+                    <img class="media-object lazy" alt="LẤY TẠI CỬA HÀNG" src="https://jollibee.com.vn/media/3478848e-3b8f-45f8-bc64-32e112922a8b.png">
+                </a>
+                <div class="media-content">
+                    <h4 class="h4 media-heading text-uppercase">LẤY TẠI CỬA HÀNG</h4>
+                    <a href="@Url.Action("Index", "Service")" class="btn action primary">Xem thêm</a>
+                </div>
+            </div>
+        </div>
+        <div class="service-entry">
+            <div class="media max-width">
+                <a class="media-center" href="@Url.Action("Index", "Service")">
+                    <img class="media-object lazy" alt="ĐẶT TIỆC SINH NHẬT" src="https://jollibee.com.vn/media/2_1.png">
+                </a>
+                <div class="media-content">
+                    <h4 class="h4 media-heading text-uppercase">ĐẶT TIỆC SINH NHẬT</h4>
+                    <a href="@Url.Action("Index", "Service")" class="btn action primary">Xem thêm</a>
+                </div>
+            </div>
+        </div>
+        <div class="service-entry">
+            <div class="media max-width">
+                <a class="media-center" href="@Url.Action("Index", "Service")">
+                    <img class="media-object lazy" alt="JOLLIBEE KID CLUB" src="https://jollibee.com.vn/media/club.png">
+                </a>
+                <div class="media-content">
+                    <h4 class="h4 media-heading text-uppercase">JOLLIBEE KID CLUB</h4>
+                    <a href="@Url.Action("Index", "Service")" class="btn action primary">Xem thêm</a>
+                </div>
+            </div>
+        </div>
+        <div class="service-entry">
+            <div class="media max-width">
+                <a class="media-center" href="@Url.Action("Index", "Service")">
+                    <img class="media-object lazy" alt="ĐƠN HÀNG LỚN" src="https://jollibee.com.vn/media/4_1.png">
+                </a>
+                <div class="media-content">
+                    <h4 class="h4 media-heading text-uppercase">ĐƠN HÀNG LỚN</h4>
+                    <a href="@Url.Action("Index", "Service")" class="btn action primary">Xem thêm</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- KẾT THÚC: Dịch vụ Jollibee -->
+
+<!-- BẮT ĐẦU: Jollibee, xin chào -->
+<link rel="stylesheet" href="/css/banner-welcome.css">
+<div class="banner_welcome" style="background-image: url('/assets/images/about_bg.jpeg'); background-repeat: no-repeat; background-position: center; background-size: cover;">
+    <div class="group_content_banner">
+        <div class="content_banner_home">
+            <h3 class="title">JOLLIBEE, XIN CHÀO</h3>
+            <p class="description">Chúng tôi là Jollibee Việt Nam với hơn 100 cửa hàng trên khắp cả nước, chúng tôi mong muốn đem đến niềm vui ẩm thực cho mọi gia đình Việt bằng những món ăn có chất lượng tốt, hương vị tuyệt hảo, dịch vụ chu đáo với một mức giá hợp lý… Hãy đến và thưởng thức nhé!</p>
+            <div class="button_banner">
+                <a class="btn_banner btn action primary" href="@Url.Action("MonNgonPhaiThu", "Menu")">ĐẶT HÀNG</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- KẾT THÚC: Jollibee, xin chào -->
+
+<!-- BẮT ĐẦU: Tìm cửa hàng mới -->
+<div class="home-store-finder">
+    <div class="store-finder-content">
+        <h2 class="store-finder-title">TÌM CỬA HÀNG</h2>
+        <div class="store-finder-form">
+            <div class="form-group">
+                <select id="city-select" class="form-control store-select">
+                    <option value="">Chọn tỉnh thành</option>
+                </select>
+                <i class="fas fa-chevron-down select-arrow"></i>
+            </div>
+            <div class="form-group">
+                <select id="district-select" class="form-control store-select" disabled>
+                    <option value="">Chọn quận huyện</option>
+                </select>
+                <i class="fas fa-chevron-down select-arrow"></i>
+            </div>
+            <div class="form-group">
+                <select id="ward-select" class="form-control store-select" disabled>
+                    <option value="">Chọn phường xã</option>
+                </select>
+                <i class="fas fa-chevron-down select-arrow"></i>
+            </div>
+            <button id="search-stores-btn" class="btn-search-stores">
+                TÌM KIẾM
+            </button>
+        </div>
+    </div>
+</div>
+<!-- KẾT THÚC: Tìm cửa hàng mới -->
+
+<!-- BẮT ĐẦU: Tin tức -->
+<div class="home-news-section">
+    <div class="container">
+        <div class="section-header text-center mb-5">
+            <h2 class="section-title">Tin Tức</h2>
+            <p class="section-subtitle">Cập nhật những thông tin mới nhất từ Jollibee</p>
+        </div>
+        
+        @{
+            var latestNews = ViewBag.LatestNews as IEnumerable<dynamic>;
+            var newsList = latestNews?.ToList() ?? new List<dynamic>();
+        }
+        
+        @* <!-- Debug info -->
+        <div class="alert alert-info mb-4">
+            <strong>Debug Info:</strong><br>
+            - Tổng tin tức trong DB: @ViewBag.TotalNewsInDB<br>
+            - Tin tức đã publish: @ViewBag.PublishedNewsInDB<br>
+            - Tin tức hiển thị: @newsList.Count<br>
+            @if (ViewBag.ErrorMessage != null)
+            {
+                <span class="text-danger">- Lỗi: @ViewBag.ErrorMessage</span><br>
+            }
+            @if (!newsList.Any())
+            {
+                <a href="/Admin/News/Create" class="alert-link">→ Tạo tin tức mới tại Admin Panel</a>
+            }
+        </div> *@
+        
+        @if (newsList.Any())
+        {
+                         <div class="row g-4">
+                @foreach (var news in newsList)
+                {
+                    <div class="col-lg-3 col-md-6 col-12">
+                        <div class="news-card-home">
+                            <div class="news-image-wrapper">
+                                <a href="/News#news-@news.NewsID" title="@news.Title">
+                                    @if (!string.IsNullOrEmpty(news.ImageUrl))
+                                    {
+                                        <img src="@news.ImageUrl" alt="@news.Title" class="news-image">
+                                    }
+                                    else
+                                    {
+                                        <div class="news-placeholder">
+                                            <i class="fas fa-newspaper"></i>
+                                        </div>
+                                    }
+                                </a>
+                                <div class="news-date-badge">
+                                    <span class="day">@news.PublishedDate.ToString("dd")</span>
+                                    <span class="month">@news.PublishedDate.ToString("MM")</span>
+                                </div>
+                            </div>
+                            <div class="news-content-home">
+                                <h3 class="news-title-home">
+                                    <a href="/News#news-@news.NewsID">@news.Title</a>
+                                </h3>
+                                <p class="news-description-home">
+                                    @(string.IsNullOrEmpty(news.ShortDescription) ? "Tin tức mới từ Jollibee" : (news.ShortDescription.Length > 100 ? news.ShortDescription.Substring(0, 100) + "..." : news.ShortDescription))
+                                </p>
+                                <div class="news-meta-home">
+                                    <span class="news-author">
+                                        <i class="fas fa-user"></i> @(string.IsNullOrEmpty(news.AuthorName) ? "Admin" : news.AuthorName)
+                                    </span>
+                                </div>
+                                <a href="/News#news-@news.NewsID" class="btn-read-more-home">
+                                    Đọc thêm <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="empty-news-state text-center">
+                <div class="empty-news-icon mb-4">
+                    <img src="/assets/images/bee.png" alt="Jollibee" width="150">
+                </div>
+                <h3 class="empty-news-title">Hiện tại chưa có tin tức mới</h3>
+                <p class="empty-news-description">Hãy quay lại sau để cập nhật những thông tin mới nhất từ Jollibee!</p>
+                <a href="@Url.Action("Index", "News")" class="btn btn-outline-primary">
+                    <i class="fas fa-newspaper"></i> Xem tất cả tin tức
+                </a>
+            </div>
+        }
+        
+        <div class="text-center mt-5">
+            <a href="@Url.Action("Index", "News")" class="btn btn-jollibee-primary btn-lg">
+                <i class=""></i> Xem thêm 
+            </a>
+        </div>
+    </div>
+</div>
+<!-- KẾT THÚC: Tin tức -->
+
+@section Scripts {
+    <script>
+        // Home Store Finder JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            const citySelect = document.getElementById('city-select');
+            const districtSelect = document.getElementById('district-select');
+            const wardSelect = document.getElementById('ward-select');
+            const searchBtn = document.getElementById('search-stores-btn');
+            
+            let locationsData = {};
+            
+            // Load locations data from API
+            async function loadLocations() {
+                try {
+                    console.log('Loading locations from API...');
+                    
+                    // First check if we have any stores data
+                    const debugResponse = await fetch('/api/stores/debug');
+                    const debugResult = await debugResponse.json();
+                    console.log('Debug API result:', debugResult);
+                    
+                    if (debugResult.success && debugResult.totalStores === 0) {
+                        console.warn('No stores found in database, creating sample data...');
+                        await createSampleStores();
+                        // After creating sample data, reload locations
+                        setTimeout(() => {
+                            loadLocations();
+                        }, 1000);
+                        return;
+                    }
+                    
+                    const response = await fetch('/api/locations');
+                    const result = await response.json();
+                    
+                    console.log('Locations API result:', result);
+                    
+                    if (result.success) {
+                        locationsData = result;
+                        console.log('Loaded cities:', result.cities);
+                        console.log('Loaded districts:', result.districts);
+                        populateCities();
+                    } else {
+                        console.error('Failed to load locations:', result.message);
+                        showError('Không thể tải dữ liệu địa điểm: ' + result.message);
+                    }
+                } catch (error) {
+                    console.error('Error loading locations:', error);
+                    showError('Lỗi kết nối khi tải dữ liệu: ' + error.message);
+                }
+            }
+            
+            // Function to create sample stores
+            async function createSampleStores() {
+                try {
+                    console.log('Creating sample stores...');
+                    const response = await fetch('/api/stores/create-samples', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        console.log(`✅ Success: ${result.message}`);
+                    } else {
+                        console.log(`❌ Failed: ${result.message}`);
+                    }
+                } catch (error) {
+                    console.error(`❌ Error: ${error.message}`);
+                }
+            }
+            
+            // Populate cities dropdown
+            function populateCities() {
+                citySelect.innerHTML = '<option value="">Chọn tỉnh thành</option>';
+                
+                if (locationsData.cities && locationsData.cities.length > 0) {
+                    locationsData.cities.forEach(city => {
+                        const option = document.createElement('option');
+                        option.value = city;
+                        option.textContent = city;
+                        citySelect.appendChild(option);
+                    });
+                }
+            }
+            
+            // Populate districts dropdown based on selected city
+            function populateDistricts(selectedCity) {
+                districtSelect.innerHTML = '<option value="">Chọn quận huyện</option>';
+                districtSelect.disabled = true;
+                wardSelect.innerHTML = '<option value="">Chọn phường xã</option>';
+                wardSelect.disabled = true;
+                
+                if (selectedCity && locationsData.districts && locationsData.districts[selectedCity]) {
+                    const districts = locationsData.districts[selectedCity];
+                    districts.forEach(district => {
+                        const option = document.createElement('option');
+                        option.value = district;
+                        option.textContent = district;
+                        districtSelect.appendChild(option);
+                    });
+                    districtSelect.disabled = false;
+                }
+            }
+            
+            // Populate wards dropdown based on selected city and district
+            async function populateWards(selectedCity, selectedDistrict) {
+                wardSelect.innerHTML = '<option value="">Chọn phường xã</option>';
+                wardSelect.disabled = true;
+                
+                if (selectedCity && selectedDistrict) {
+                    try {
+                        console.log(`Loading wards for city: ${selectedCity}, district: ${selectedDistrict}`);
+                        const response = await fetch(`/api/wards?city=${encodeURIComponent(selectedCity)}&district=${encodeURIComponent(selectedDistrict)}`);
+                        const result = await response.json();
+                        
+                        if (result.success && result.wards && result.wards.length > 0) {
+                            result.wards.forEach(ward => {
+                                const option = document.createElement('option');
+                                option.value = ward;
+                                option.textContent = ward;
+                                wardSelect.appendChild(option);
+                            });
+                            wardSelect.disabled = false;
+                            console.log(`Loaded ${result.wards.length} wards`);
+                        } else {
+                            console.log('No wards found for this district');
+                        }
+                    } catch (error) {
+                        console.error('Error loading wards:', error);
+                    }
+                }
+            }
+            
+            // Handle city selection change
+            citySelect.addEventListener('change', function() {
+                const selectedCity = this.value;
+                populateDistricts(selectedCity);
+                
+                // Add visual feedback
+                if (selectedCity) {
+                    this.classList.add('success');
+                    this.classList.remove('error');
+                } else {
+                    this.classList.remove('success', 'error');
+                }
+            });
+            
+            // Handle district selection change
+            districtSelect.addEventListener('change', function() {
+                const selectedCity = citySelect.value;
+                const selectedDistrict = this.value;
+                
+                // Load wards for the selected district
+                if (selectedCity && selectedDistrict) {
+                    populateWards(selectedCity, selectedDistrict);
+                }
+                
+                // Add visual feedback
+                if (this.value) {
+                    this.classList.add('success');
+                    this.classList.remove('error');
+                } else {
+                    this.classList.remove('success', 'error');
+                }
+            });
+            
+            // Handle ward selection change
+            wardSelect.addEventListener('change', function() {
+                // Add visual feedback
+                if (this.value) {
+                    this.classList.add('success');
+                    this.classList.remove('error');
+                } else {
+                    this.classList.remove('success', 'error');
+                }
+            });
+            
+            // Handle search button click
+            searchBtn.addEventListener('click', function() {
+                const selectedCity = citySelect.value;
+                const selectedDistrict = districtSelect.value;
+                const selectedWard = wardSelect.value;
+                
+                // Validate selection
+                if (!selectedCity) {
+                    showFieldError(citySelect, 'Vui lòng chọn tỉnh thành');
+                    return;
+                }
+                
+                // Show loading state
+                this.classList.add('loading');
+                this.textContent = '';
+                
+                // Build URL with parameters
+                const params = new URLSearchParams();
+                params.append('city', selectedCity);
+                if (selectedDistrict) {
+                    params.append('district', selectedDistrict);
+                }
+                if (selectedWard) {
+                    params.append('ward', selectedWard);
+                }
+                
+                // Redirect to store page with search params
+                const storeUrl = '/Store/Index?' + params.toString();
+                
+                // Add delay for better UX
+                setTimeout(() => {
+                    window.location.href = storeUrl;
+                }, 500);
+            });
+            
+            // Show field error
+            function showFieldError(field, message) {
+                field.classList.add('error');
+                field.classList.remove('success');
+                
+                // Remove existing error message
+                const existingError = field.parentNode.querySelector('.error-message');
+                if (existingError) {
+                    existingError.remove();
+                }
+                
+                // Add new error message
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message';
+                errorDiv.textContent = message;
+                field.parentNode.appendChild(errorDiv);
+                
+                // Remove error after 3 seconds
+                setTimeout(() => {
+                    field.classList.remove('error');
+                    errorDiv.remove();
+                }, 3000);
+            }
+            
+            // Create sample stores if database is empty
+            async function createSampleStores() {
+                try {
+                    console.log('Creating sample stores...');
+                    const response = await fetch('/api/stores/seed', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    const result = await response.json();
+                    console.log('Seed API result:', result);
+                    
+                    if (result.success) {
+                        console.log('Sample stores created successfully');
+                        // Reload locations after creating sample data
+                        setTimeout(loadLocations, 1000);
+                    } else {
+                        showError('Không thể tạo dữ liệu mẫu: ' + result.message);
+                    }
+                } catch (error) {
+                    console.error('Error creating sample stores:', error);
+                    showError('Lỗi khi tạo dữ liệu mẫu: ' + error.message);
+                }
+            }
+
+            // Show general error
+            function showError(message) {
+                // Create a styled error message
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'alert alert-danger';
+                errorDiv.style.position = 'fixed';
+                errorDiv.style.top = '20px';
+                errorDiv.style.right = '20px';
+                errorDiv.style.zIndex = '9999';
+                errorDiv.style.maxWidth = '400px';
+                errorDiv.innerHTML = `
+                    <strong><i class="fas fa-exclamation-triangle"></i> Lỗi:</strong><br>
+                    ${message}
+                    <button type="button" class="btn-close" style="float: right;" onclick="this.parentElement.remove()"></button>
+                `;
+                
+                document.body.appendChild(errorDiv);
+                
+                // Auto remove after 5 seconds
+                setTimeout(() => {
+                    if (errorDiv.parentNode) {
+                        errorDiv.remove();
+                    }
+                }, 5000);
+                
+                console.error(message);
+            }
+            
+            // Initialize the component
+            loadLocations();
+            
+            // Add keyboard support
+            [citySelect, districtSelect].forEach(select => {
+                select.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        searchBtn.click();
+                    }
+                });
+            });
+            
+            // Add focus effects
+            [citySelect, districtSelect].forEach(select => {
+                select.addEventListener('focus', function() {
+                    this.parentNode.style.transform = 'translateY(-2px)';
+                });
+                
+                select.addEventListener('blur', function() {
+                    this.parentNode.style.transform = 'translateY(0)';
+                });
+            });
+        });
+
+        // VOUCHER MODAL JAVASCRIPT - Moved from second section
+        // Hiển thị modal voucher khi trang load xong
+        document.addEventListener('DOMContentLoaded', function() {
+            const voucherModal = document.getElementById('voucherRewardModal');
+            if (voucherModal) {
+                const modal = new bootstrap.Modal(voucherModal);
+                modal.show();
+            }
+        });
+
+        // Copy voucher code
+        function copyVoucherCode(code) {
+            navigator.clipboard.writeText(code).then(function() {
+                showToast('Đã sao chép mã voucher: ' + code, 'success');
+            }).catch(function() {
+                // Fallback cho trình duyệt không hỗ trợ clipboard API
+                const textArea = document.createElement('textarea');
+                textArea.value = code;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showToast('Đã sao chép mã voucher: ' + code, 'success');
+            });
+        }
+
+        // Claim voucher
+        function claimVoucher(promotionId) {
+            if (!promotionId) {
+                showToast('Có lỗi xảy ra. Vui lòng thử lại.', 'error');
+                return;
+            }
+
+            const claimBtn = document.querySelector('.voucher-claim-btn');
+            if (claimBtn) {
+                claimBtn.disabled = true;
+                claimBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...';
+            }
+
+            fetch('@Url.Action("ClaimVoucher", "Account")', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                },
+                body: new URLSearchParams({
+                    'promotionId': promotionId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    
+                    // Đóng modal và redirect sau 2 giây
+                    setTimeout(() => {
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('voucherRewardModal'));
+                        modal.hide();
+                        
+                        if (data.redirectUrl) {
+                            window.location.href = data.redirectUrl;
+                        }
+                    }, 2000);
+                } else {
+                    showToast(data.message, 'error');
+                    if (claimBtn) {
+                        claimBtn.disabled = false;
+                        claimBtn.innerHTML = '<i class="fas fa-hand-holding-heart me-2"></i>Nhận voucher';
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Có lỗi xảy ra. Vui lòng thử lại.', 'error');
+                if (claimBtn) {
+                    claimBtn.disabled = false;
+                    claimBtn.innerHTML = '<i class="fas fa-hand-holding-heart me-2"></i>Nhận voucher';
+                }
+            });
+        }
+
+        // Show toast notification
+        function showToast(message, type) {
+            const toastContainer = document.createElement('div');
+            toastContainer.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+                background: ${type === 'success' ? '#d4edda' : '#f8d7da'};
+                color: ${type === 'success' ? '#155724' : '#721c24'};
+                border: 1px solid ${type === 'success' ? '#c3e6cb' : '#f5c6cb'};
+                border-radius: 0.375rem;
+                padding: 12px 20px;
+                box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+                max-width: 350px;
+                word-wrap: break-word;
+            `;
+            
+            toastContainer.innerHTML = `
+                <div style="display: flex; align-items: center;">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}" style="margin-right: 8px;"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(toastContainer);
+            
+            setTimeout(() => {
+                if (toastContainer.parentNode) {
+                    toastContainer.remove();
+                }
+            }, 5000);
+        }
+    </script>
+}
+
+<!-- Voucher Reward Modal -->
+@if (ViewBag.VoucherRewardData != null)
+{
+    var voucherData = (JollibeeClone.ViewModels.VoucherRewardViewModel)ViewBag.VoucherRewardData;
+    
+    <div class="modal fade" id="voucherRewardModal" tabindex="-1" aria-labelledby="voucherRewardModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content voucher-modal">
+                <div class="modal-header voucher-header">
+                    <h5 class="modal-title voucher-title" id="voucherRewardModalLabel">
+                        @if (voucherData.IsNewRewardAchieved)
+                        {
+                            <text><i class="fas fa-gift text-warning me-2"></i>Chúc mừng bạn!</text>
+                        }
+                        else
+                        {
+                            <text><i class="fas fa-chart-line text-info me-2"></i>Tiến trình tích lũy</text>
+                        }
+                    </h5>
+                    <button type="button" class="btn-close voucher-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body voucher-body">
+                    @if (voucherData.IsNewRewardAchieved)
+                    {
+                        <!-- Modal chúc mừng khi đạt mốc -->
+                        <div class="text-center voucher-success">
+                            <div class="voucher-icon-large mb-3">
+                                <i class="fas fa-trophy text-warning"></i>
+                            </div>
+                            <h4 class="voucher-message">@voucherData.StatusMessage</h4>
+                            <p class="voucher-encouragement">@voucherData.EncouragementMessage</p>
+                            
+                            <div class="voucher-details mb-4">
+                                <div class="voucher-code-display">
+                                    <label>Mã voucher của bạn:</label>
+                                    <div class="code-box">
+                                        <span class="voucher-code">@voucherData.VoucherCode</span>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="copyVoucherCode('@voucherData.VoucherCode')">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="voucher-actions">
+                                <button type="button" class="btn btn-primary voucher-claim-btn" onclick="claimVoucher(@voucherData.GeneratedPromotionID)">
+                                    <i class="fas fa-hand-holding-heart me-2"></i>Nhận voucher
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                    Để sau
+                                </button>
+                            </div>
+                        </div>
+                    }
+                    else if (voucherData.HasRewardEligible)
+                    {
+                        <!-- Modal hiển thị tiến trình -->
+                        <div class="voucher-progress">
+                            <div class="progress-header mb-3">
+                                <h5>@voucherData.StatusMessage</h5>
+                                <p class="text-muted">@voucherData.EncouragementMessage</p>
+                            </div>
+                            
+                            <div class="progress-bar-container mb-4">
+                                <div class="progress voucher-progress-bar">
+                                    <div class="progress-bar @voucherData.ProgressBarClass" role="progressbar" 
+                                         style="width: @(voucherData.ProgressPercentage)%" 
+                                         aria-valuenow="@voucherData.ProgressPercentage" 
+                                         aria-valuemin="0" aria-valuemax="100">
+                                        @(voucherData.ProgressPercentage)%
+                                    </div>
+                                </div>
+                                <div class="progress-text">
+                                    <strong>@voucherData.CurrentSpending.ToString("N0")₫</strong> / @voucherData.NextThreshold.ToString("N0")₫
+                                </div>
+                            </div>
+                            
+                            <div class="voucher-thresholds">
+                                <h6>Các mốc ưu đãi:</h6>
+                                <div class="thresholds-list">
+                                    @foreach (var threshold in voucherData.AllThresholds)
+                                    {
+                                        <div class="threshold-item @(threshold.IsAchieved ? "achieved" : "") @(threshold.IsCurrentTarget ? "current-target" : "")">
+                                            <div class="threshold-icon">
+                                                @if (threshold.IsAchieved)
+                                                {
+                                                    <i class="fas fa-check-circle text-success"></i>
+                                                }
+                                                else if (threshold.IsCurrentTarget)
+                                                {
+                                                    <i class="fas fa-bullseye text-warning"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="fas fa-circle text-muted"></i>
+                                                }
+                                            </div>
+                                            <div class="threshold-info">
+                                                <span class="threshold-desc">@threshold.Description</span>
+                                                @if (threshold.IsCurrentTarget)
+                                                {
+                                                    <span class="badge bg-warning text-dark">Mục tiêu tiếp theo</span>
+                                                }
+                                                else if (threshold.IsAchieved)
+                                                {
+                                                    <span class="badge bg-success">Đã đạt</span>
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            
+                            <div class="voucher-actions mt-4">
+                                <a href="@Url.Action("MonNgonPhaiThu", "Menu")" class="btn btn-primary">
+                                    <i class="fas fa-shopping-cart me-2"></i>Tiếp tục mua sắm
+                                </a>
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                    Đóng
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
