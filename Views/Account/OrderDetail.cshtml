@@ -21,11 +21,11 @@
                 Đặt hàng lúc @Model.OrderDate.ToString("HH:mm dd/MM/yyyy")
             </p>
         </div>
+        <!-- sử dụng taghelper-->
         <div class="header-status">
-            <span class="status-badge large" style="background-color: @Model.StatusColor; color: white;">
-                <i class="@Model.StatusIcon"></i>
-                @Model.StatusName
-            </span>
+            <div class="header-status">
+                <span jb-status="@Model.StatusName" class="large">@Model.StatusName</span>
+            </div>
         </div>
     </div>
 
@@ -104,10 +104,12 @@
                                         }
                                     </div>
                                 }
-                                
+                                <!--sử dụng taghelper-->
                                 <div class="item-pricing">
-                                    <span class="unit-price">@item.UnitPrice.ToString("N0")₫ x @item.Quantity</span>
-                                    <span class="subtotal">@item.Subtotal.ToString("N0")₫</span>
+                                    <span class="unit-price">
+                                        <span jb-price="@item.UnitPrice"></span> x @item.Quantity
+                                    </span>
+                                    <span class="subtotal" jb-price="@item.Subtotal"></span>
                                 </div>
                             </div>
                         </div>
@@ -253,7 +255,8 @@
                 <div class="order-summary">
                     <div class="summary-row">
                         <span>Tạm tính:</span>
-                        <span>@Model.SubtotalAmount.ToString("N0")₫</span>
+                        <!--sử dụng taghelper-->
+                        <span jb-price="@Model.SubtotalAmount"></span>
                     </div>
                     
                     @* Chỉ hiển thị phí ship khi là delivery (giao hàng), không hiển thị khi pickup *@
@@ -263,7 +266,8 @@
                         {
                             <div class="summary-row">
                                 <span>Phí giao hàng:</span>
-                                <span>@Model.ShippingFee.ToString("N0")₫</span>
+                                <!--sử dụng taghelper-->
+                                <span jb-price="@Model.ShippingFee"></span>
                             </div>
                         }
                         else
@@ -279,13 +283,15 @@
                     {
                         <div class="summary-row discount">
                             <span>Giảm giá:</span>
-                            <span>-@Model.DiscountAmount.ToString("N0")₫</span>
+                            <!--sử dụng taghelper-->
+                            <span jb-price="@Model.DiscountAmount"></span>
                         </div>
                     }
                     
                     <div class="summary-row total">
                         <span>Tổng cộng:</span>
-                        <span>@Model.TotalAmount.ToString("N0")₫</span>
+                        <!--sử dụng taghelper-->
+                        <span jb-price="@Model.TotalAmount" class="fs-4"></span>
                     </div>
                 </div>
             </div>

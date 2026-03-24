@@ -337,9 +337,10 @@
                                                     <strong>Thanh toán:</strong> @order.PaymentMethodName
                                                 </div>
                                             </div>
-                                            <div class="order-total">
-                                                @order.FormattedTotalAmount
-                                            </div>
+                                            <!--sử dụng taghelper-->
+                                        <div class="order-total">
+                                            <span jb-price="@order.TotalAmount"></span>
+                                        </div>
                                         </div>
 
                                         <!-- Order Actions -->
