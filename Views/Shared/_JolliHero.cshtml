@@ -1,0 +1,25 @@
+@{
+    var title = ViewData["HeroTitle"] as string ?? "Razor Page";
+    var subtitle = ViewData["HeroSubtitle"] as string ?? "Trang Razor Pages tích hợp layout hiện tại.";
+    var ctaText = ViewData["HeroCtaText"] as string ?? "Xem thực đơn";
+    var ctaUrl = ViewData["HeroCtaUrl"] as string ?? Url.Action("MonNgonPhaiThu", "Menu");
+}
+
+<section class="jolli-hero rounded-4 p-4 p-md-5 mb-4">
+    <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+            <span class="badge jolli-hero-badge mb-3">Jollibee Clone</span>
+            <h1 class="display-6 fw-bold text-white mb-3">@title</h1>
+            <p class="lead text-white-50 mb-4">@subtitle</p>
+            <div class="d-flex flex-wrap gap-2">
+                <a class="btn btn-warning fw-bold" href="@ctaUrl">@ctaText</a>
+                <a class="btn btn-outline-light fw-bold" href="@Url.Action("Index", "Promotion")">Khuyến mãi</a>
+            </div>
+        </div>
+        <div class="col-lg-5 text-center">
+            <div class="jolli-hero-art mx-auto">
+                <img src="/assets/images/mon_ngon_phai_thu.png" alt="Món ngon phải thử" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</section>

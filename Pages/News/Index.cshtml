@@ -1,29 +1,28 @@
-@model IEnumerable<object>
-
+﻿@page
+@model JollibeeClone.Pages.News.IndexModel
 @{
     ViewData["Title"] = "Tin Tức & Sự Kiện";
-    var newsList = Model.Cast<dynamic>().ToList();
+    Layout = "_Layout";
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/news-section.css" />
+    <link rel="stylesheet" href="~/css/news-section.css" asp-append-version="true" />
 }
 
-<!-- Enhanced Header Section like Jollibee -->
 <div class="news-page">
     <div class="news-header">
         <div class="container">
             <div class="text-center">
                 <h1 class="news-title">TIN TỨC & SỰ KIỆN</h1>
+                <p>Trạng thái hệ thống: @Model.ConnectionTest</p>
                 <p class="news-subtitle">Tận hưởng những khoảnh khắc trọn vẹn cùng Jollibee</p>
             </div>
         </div>
     </div>
 
-    <!-- News Grid -->
     <div class="news-section">
         <div class="container">
-            @if (!newsList.Any())
+            @if (!Model.NewsList.Any())
             {
                 <div class="empty-state">
                     <i class="fas fa-newspaper"></i>
@@ -34,7 +33,7 @@
             else
             {
                 <div class="row g-4" id="newsContainer">
-                    @foreach (var news in newsList)
+                    @foreach (var news in Model.NewsList)
                     {
                         <div class="col-lg-4 col-md-6">
                             <div class="news-card" data-news-title="@news.Title">
@@ -54,7 +53,7 @@
 
                                 <div class="news-content">
                                     <h3 class="news-card-title">@news.Title</h3>
-                                    
+
                                     @if (!string.IsNullOrEmpty(news.ShortDescription))
                                     {
                                         <p class="news-description">@news.ShortDescription</p>
@@ -77,8 +76,7 @@
                                         <h5>@news.Title</h5>
                                         <p>@(news.ShortDescription ?? "Đọc để khám phá nội dung thú vị...")</p>
                                         <button class="btn-view-detail" data-news-id="@news.NewsID">
-                                            <i class="fas fa-book-open"></i>
-                                            Đọc thêm
+                                            <i class="fas fa-book-open"></i> Đọc thêm
                                         </button>
                                     </div>
                                 </div>
@@ -91,21 +89,20 @@
     </div>
 </div>
 
-<!-- Enhanced News Detail Modal -->
 <div class="modal fade" id="newsDetailModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="newsModalTitle"></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title fw-bold" id="newsModalTitle"></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body" id="newsModalBody">
-                <!-- News content will be loaded here -->
+                @* Content loaded via AJAX *@
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary" onclick="shareCurrentNews()">
-                    <i class="fas fa-share-alt"></i> Chia sẻ
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-danger rounded-pill px-4" onclick="shareCurrentNews()">
+                    <i class="fas fa-share-alt me-2"></i> Chia sẻ
                 </button>
             </div>
         </div>
@@ -117,84 +114,51 @@
         let currentNewsData = null;
 
         $(document).ready(function() {
-            // Read more functionality
-            $('.btn-view-detail').on('click', function() {
+            // Sử dụng Event Delegation cho các nút bấm được render động
+            $(document).on('click', '.btn-view-detail', function() {
                 var newsId = $(this).data('news-id');
                 loadNewsDetail(newsId);
             });
         });
 
         function loadNewsDetail(newsId) {
+            // Chú ý: Vẫn gọi qua API của NewsController cũ vì bạn đã viết logic xử lý JSON ở đó
             $.get('/News/GetNewsDetails/' + newsId)
                 .done(function(response) {
                     if (response.success) {
                         var news = response.data;
                         currentNewsData = news;
                         $('#newsModalTitle').text(news.title);
-                        
+
                         var modalContent = `
-                            <div class="news-detail">
-                                <div class="row">
-                                    <div class="col-12">
-                                        ${news.imageUrl ? `<img src="${news.imageUrl}" alt="${news.title}" class="img-fluid mb-4">` : ''}
-                                    </div>
+                            <div class="news-detail p-2">
+                                ${news.imageUrl ? `<img src="${news.imageUrl}" class="img-fluid rounded-4 mb-4 shadow-sm">` : ''}
+                                <div class="d-flex justify-content-between text-muted small mb-3">
+                                    <span><i class="fas fa-calendar me-1"></i> ${new Date(news.publishedDate).toLocaleDateString('vi-VN')}</span>
+                                    <span><i class="fas fa-user me-1"></i> ${news.authorName}</span>
                                 </div>
-                                
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <div class="d-flex align-items-center mb-2">
-                                            <i class="fas fa-calendar me-2"></i>
-                                            <strong>Ngày đăng:</strong> <span class="ms-2">${new Date(news.publishedDate).toLocaleDateString('vi-VN')}</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="d-flex align-items-center mb-2">
-                                            <i class="fas fa-user me-2"></i>
-                                            <strong>Tác giả:</strong> <span class="ms-2">${news.authorName}</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                ${news.shortDescription ? `
-                                <div class="alert alert-primary">
-                                    <i class="fas fa-info-circle me-2"></i>
-                                    ${news.shortDescription}
-                                </div>
-                                ` : ''}
-
+                                <h4 class="fw-bold text-danger mb-3">${news.title}</h4>
                                 <div class="news-content-detail">
                                     ${news.content}
                                 </div>
                             </div>
                         `;
-                        
+
                         $('#newsModalBody').html(modalContent);
                         $('#newsDetailModal').modal('show');
-                    } else {
-                        alert('Có lỗi xảy ra: ' + response.message);
                     }
-                })
-                .fail(function() {
-                    alert('Có lỗi xảy ra khi tải tin tức.');
                 });
         }
 
         function shareCurrentNews() {
-            if (currentNewsData) {
-                if (navigator.share) {
-                    navigator.share({
-                        title: currentNewsData.title,
-                        text: currentNewsData.shortDescription || '',
-                        url: window.location.origin + '/News#news-' + currentNewsData.newsID
-                    });
-                } else {
-                    // Fallback: copy to clipboard
-                    var url = window.location.origin + '/News#news-' + currentNewsData.newsID;
-                    navigator.clipboard.writeText(url).then(function() {
-                        alert('Đã sao chép link tin tức!');
-                    });
-                }
+            if (currentNewsData && navigator.share) {
+                navigator.share({
+                    title: currentNewsData.title,
+                    url: window.location.origin + '/News#news-' + currentNewsData.newsID
+                });
+            } else {
+                alert('Chức năng chia sẻ đang được cập nhật!');
             }
         }
     </script>
-} 
+}

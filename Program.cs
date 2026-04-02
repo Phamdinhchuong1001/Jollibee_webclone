@@ -72,6 +72,9 @@ builder.Services.AddControllersWithViews(options =>
     options.SuppressModelStateInvalidFilter = false;
 });
 
+// Razor Pages
+builder.Services.AddRazorPages();
+
 // Cấu hình MVC options để hỗ trợ mega combo forms
 builder.Services.Configure<Microsoft.AspNetCore.Mvc.MvcOptions>(options =>
 {
@@ -83,15 +86,13 @@ builder.Services.Configure<Microsoft.AspNetCore.Mvc.MvcOptions>(options =>
 // Cấu hình Form Options cho MEGA COMBO với 50 groups x 50 options
 builder.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(options =>
 {
-    // Tính toán: 50 groups x 50 options x ~10 fields per option = ~25,000 fields
-    // Thêm các fields khác: combo info, images, etc = ~500 fields
-    // Total estimate: ~25,500 fields, safe margin x2 = ~51,000
-    options.ValueCountLimit = 102400; // 100K values cho mega combo safety margin
-    options.KeyLengthLimit = 32768; // 32KB key length cho deep nesting với 50 levels
-    options.ValueLengthLimit = 8 * 1024 * 1024; // 8MB cho large form values
-    options.MultipartBodyLengthLimit = 1024 * 1024 * 1024; // 1GB cho file uploads với mega combo
-    options.MultipartHeadersCountLimit = 8192; // 8K headers
-    options.MultipartHeadersLengthLimit = 262144; // 256KB headers length
+
+    options.ValueCountLimit = 102400; 
+    options.KeyLengthLimit = 32768; 
+    options.ValueLengthLimit = 8 * 1024 * 1024; 
+    options.MultipartBodyLengthLimit = 1024 * 1024 * 1024; 
+    options.MultipartHeadersCountLimit = 8192;
+    options.MultipartHeadersLengthLimit = 262144; 
 });
 
 
@@ -157,5 +158,8 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+// Razor Pages
+app.MapRazorPages();
 
 app.Run();
