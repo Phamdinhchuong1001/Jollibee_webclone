@@ -1,0 +1,117 @@
+﻿@model JollibeeClone.Components.OrderSummary.OrderSummaryViewComponent.OrderSummaryModel
+
+<div class="order-summary-widget">
+    <div class="summary-header">
+        <h5 class="summary-title">
+            <i class="fas fa-box"></i> Tóm tắt đơn hàng
+        </h5>
+    </div>dotne
+
+    <div class="summary-content">
+        <!-- Mã đơn hàng -->
+        <div class="summary-row">
+            <span class="label">Mã đơn:</span>
+            <span class="value">
+                <strong>@Model.OrderCode</strong>
+            </span>
+        </div>
+
+        <!-- Số lượng sản phẩm -->
+        <div class="summary-row">
+            <span class="label">Số sản phẩm:</span>
+            <span class="value">
+                <span class="badge bg-secondary">@Model.ItemCount</span>
+            </span>
+        </div>
+
+        <!-- Trạng thái -->
+        <div class="summary-row">
+            <span class="label">Trạng thái:</span>
+            <span class="value">
+                @if (Model.StatusName?.ToLower().Contains("hoàn") == true)
+                {
+                    <span class="badge bg-success">
+                        <i class="fas fa-check-circle"></i> @Model.StatusName
+                    </span>
+                }
+                else if (Model.StatusName?.ToLower().Contains("chờ") == true)
+                {
+                    <span class="badge bg-warning text-dark">
+                        <i class="fas fa-clock"></i> @Model.StatusName
+                    </span>
+                }
+                else if (Model.StatusName?.ToLower().Contains("chuẩn bị") == true)
+                {
+                    <span class="badge bg-info text-dark">
+                        <i class="fas fa-cooking"></i> @Model.StatusName
+                    </span>
+                }
+                else
+                {
+                    <span class="badge bg-secondary">@Model.StatusName</span>
+                }
+            </span>
+        </div>
+
+        <!-- Tổng tiền -->
+        <div class="summary-row total-row">
+            <span class="label">Tổng tiền:</span>
+            <span class="value total-value">
+                <strong style="color: #d32f2f; font-size: 1.1em;">
+                    @Model.TotalAmount.ToString("N0") VNĐ
+                </strong>
+            </span>
+        </div>
+    </div>
+</div>
+
+<style>
+    .order-summary-widget {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 15px;
+        background-color: #f9f9f9;
+        margin: 15px 0;
+    }
+
+    .summary-header {
+        border-bottom: 2px solid #d32f2f;
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+    }
+
+    .summary-title {
+        color: #d32f2f;
+        margin: 0;
+        font-size: 1.1em;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+        .summary-row.total-row {
+            border: none;
+            border-top: 2px solid #d32f2f;
+            padding: 12px 0;
+            font-size: 1.05em;
+        }
+
+        .summary-row .label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .summary-row .value {
+            color: #555;
+        }
+
+    .summary-footer {
+        text-align: center;
+        padding-top: 10px;
+        margin-top: 10px;
+    }
+</style>
